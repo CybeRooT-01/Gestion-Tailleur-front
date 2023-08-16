@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CategorieService } from '../services/categorie.service';
+import { CategorieService } from '../../services/categorie.service';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -37,7 +39,11 @@ export class FormComponent implements OnInit {
     this.imageFile = event.target.files[0];
     this.extension = this.imageFile.name.split('.')[1];
     if (!this.extensionsAutorised.includes(this.extension)) {
-      alert('Format non autorisé');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Vous devez choisir une image',
+      });
       return;
     }
     const reader = new FileReader();
@@ -106,10 +112,11 @@ export class FormComponent implements OnInit {
       prix: this.prix,
       stock: this.stock,
     };
-    // console.log(data);
     this.categorieService.addArticle(data).subscribe((data) => {
       this.num++;
-      console.log(data);
+      if (data) {
+        Swal.fire('Good job!', 'Categorie Ajouté avec success', 'success');
+      }
     });
   }
 }

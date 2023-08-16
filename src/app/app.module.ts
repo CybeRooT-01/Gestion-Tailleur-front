@@ -7,11 +7,12 @@ import { CategorieComponent } from './categorie/categorie.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ArticleComponent } from './article/article.component';
-import { FormComponent } from './form/form.component';
+import { FormComponent } from './article/form/form.component';
 import { ListeComponent } from './liste/liste.component';
-import { ItemComponent } from './item/item.component';
+import { ItemComponent } from './liste/item/item.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +22,6 @@ import { FormsModule } from '@angular/forms';
     ListeComponent,
     ItemComponent,
     PaginationComponent,
-
   ],
   imports: [
     BrowserModule,
@@ -29,6 +29,7 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     NgxPaginationModule,
     FormsModule,
+    SweetAlert2Module.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

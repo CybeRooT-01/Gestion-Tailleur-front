@@ -17,19 +17,18 @@
           (change)="changeMode()"
         />
         <label class="form-check-label ms-2" for="flexSwitchCheckDefault"
-          >Ajout</label
-        >
+          >Ajout</label>
       </div>
     </div>
   </div>
   <div class="row d-flex align-items-center mt-4">
     <h4 class="col-md-4">Libelle</h4>
     <div class="col-md-4">
-      <input type="text" class="form-control" 
+      <input type="text" class="form-control input" [(ngModel)]="libelle" (input)="checkName(libelle)"
       />
     </div>
     <div class="col-md-4 text-end">
-      <button class="btn btn-primary">Ok</button>
+      <button class="btn btn-primary todisable" (click)="ajouterOuModifierCategorie()" disabled>Ok</button>
     </div>
   </div>
   <hr />
@@ -38,7 +37,7 @@
       <h5>Liste des catégories</h5>
     </div>
     <div class="col-md-6 text-end">
-      <button class="btn btn-danger" disabled>Supprimer</button>
+      <button class="btn btn-danger" id="btnSupprimer" (click)="supprimerCategorie()" disabled>Supprimer</button>
     </div>
   </div>
   <div class="container text-center">
@@ -51,7 +50,9 @@
                 class="form-check-input"
                 type="checkbox"
                 value=""
-                id="flexCheckDefault"
+                id="tocheckall"
+                [checked]="selectedIds.length == categories.length"
+                (change)="checkall($event)"
               />
             </div>
           </th>
@@ -70,14 +71,17 @@
           <td>
             <div class="form-check">
               <input
-                class="form-check-input"
+                class="form-check-input all"
                 type="checkbox"
                 value=""
                 id="flexCheckDefault"
+                id="categorie_{{categorie.id}}"
+                (change)="onItemCheckboxChange(categorie.id)"
+                [checked]="selectedIds.includes(categorie.id)"
               />
             </div>
           </td>
-          <td class="libelle" (click)="onLibelleClick()">{{categorie.libelle}}</td>
+          <td #categoryElement class="libelle" id="{{categorie.id}}" (click)="onLabelClick(categorie.libelle, categorie.id)">{{categorie.libelle}}</td>
         </tr>
       </tbody>
     </table>
