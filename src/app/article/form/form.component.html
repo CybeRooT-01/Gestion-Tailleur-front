@@ -65,7 +65,7 @@
         [(ngModel)]="searchTerm"
         name="searchTerm"
         (keyup)="getAllFournisseur()"
-        [value]="selectedFournisseur?.nom"
+        [value]=""
         (input)="onInputChange()"
         autocomplete="off"
         required
@@ -117,5 +117,7 @@
   </div>
 </form>
 <div class="row fournisseur" *ngFor="let fournisseur of fournisseurs">
-  <span class="name" (click)="selectFournisseur(fournisseur)">{{ fournisseur.nom}}</span>
+  <span  [ngStyle]="fournisseur.selected ? selectedStyle : defaultStyle" class="name"   (click)="fournisseur.selected ? 
+    deselectFournisseur(fournisseur) :
+    selectFournisseur(fournisseur)">{{ fournisseur.nom}}</span>
 </div>

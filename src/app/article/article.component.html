@@ -13,7 +13,38 @@
               <h4 class="text-white">Article</h4>
             </div>
           </div>
-          <app-form></app-form>
+            <app-form
+            [libelleValue]="libelleValue"
+            [getValue]="getValue"
+            [chargerCategorie] = "chargerCategorie"
+            [imageFile] = "imageFile"
+            [fournisseurs] = "fournisseurs"
+            [extension] = "extension"
+            [searchTerm] = "searchTerm"
+            [pathToImage] = "pathToImage"
+            [imageEnBase64] = "imageEnBase64"
+            [getSelectedCategory] = "getSelectedCategory"
+            [extensionsAutorised] = "extensionsAutorised"
+            [filteredFournisseurs] = "filteredFournisseurs"
+            [libCode] = "libCode" 
+            [ref] = "ref"
+            [categories] = "categories"
+            [selectedFournisseurs] = "selectedFournisseurs"
+            [deselectFournisseur]="deselectFournisseur"
+            [num] = "num"
+            [categoryId] = "categoryId"
+            [prix] = "prix"
+            [stock]="stock"
+            [updateref]="updateref"
+            [onCategoryChange]="onCategoryChange"
+            [getAllFournisseur]="getAllFournisseur"
+            [onInputChange]="onInputChange"
+            [ajouterArticle]="ajouterArticle"
+            [onFileChange]="onFileChange"
+            [selectFournisseur]="selectFournisseur"
+            [categoryservice]="categoryservice"
+            [selectedFournisseursName]="selectedFournisseursName"
+            ></app-form>
             <app-liste></app-liste>
         </div>
       </div>
