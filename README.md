@@ -1,5 +1,7 @@
 # Tailleur
-
+when I wrote this code, only me and god knew how it work, now only god know 
+if y're trying to optimize this project and failed, please increment the folowing counter as a warning to the next guy
+Total Days Wasted Here: 6
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.0.
 
 ## Development server
