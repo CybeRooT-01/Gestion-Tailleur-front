@@ -1,0 +1,121 @@
+<form class="row border mt-3" style="width: 700px" #f="ngForm">
+  <div class="col-md-6">
+    <div class="form-group" style="margin-bottom: 10px">
+      <label for="libelle" class="text-white">Libellé:</label>
+      <input
+        type="text"
+        id="libelle"
+        class="form-control form-control-dark mb-2"
+        placeholder="Libellé"
+        [(ngModel)]="libelleValue"
+        name="libelleValue"
+        (input)="getValue()"
+        autocomplete="off"
+        (keyup)="updateref()"
+        minlength="4"
+        required
+      />
+
+      <label for="prix" class="text-white">Prix:</label>
+      <input
+        type="text"
+        id="prix"
+        class="form-control form-control-dark mb-2"
+        placeholder="Prix"
+        autocomplete="off"
+        name="prix"
+        [(ngModel)]="prix"
+        required
+      />
+
+      <label for="stock" class="text-white">Stock:</label>
+      <input
+        type="text"
+        id="stock"
+        class="form-control form-control-dark mb-2"
+        placeholder="Stock"
+        autocomplete="off"
+        name="stock"
+        [(ngModel)]="stock"
+        required
+      />
+
+      <label for="categorie" class="text-white">Catégorie:</label>
+      <select
+        type="text"
+        id="categorie"
+        class="form-control form-control-dark mb-2"
+        placeholder="Catégorie"
+        [(ngModel)]="getSelectedCategory"
+        name="selectedCategory"
+        (change)="updateref()"
+        (change)="onCategoryChange($event)"
+      >
+        <option *ngFor="let cat of categories" [value]="cat.libelle" [id]="cat.id">
+          {{ cat.libelle }}
+        </option>
+      </select>
+
+      <label for="fournisseur" class="text-white">Fournisseur:</label>
+      <input
+        type="text"
+        id="fournisseur"
+        class="form-control form-control-dark mb-2"
+        placeholder="Fournisseur"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+        (keyup)="getAllFournisseur()"
+        [value]="selectedFournisseur?.nom"
+        (input)="onInputChange()"
+        autocomplete="off"
+        required
+      />
+      <button class="btn btn-primary" (click)="ajouterArticle()"
+      [disabled]="!f.valid"
+      >
+        Enregistrer
+      </button>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <label class="btn-btn-default">
+        <img [src]="imageFile" id="preview" draggable="false" />
+        <i
+          id="1"
+          class="fa fa-upload fa-2x"
+          style="
+            width: 250px;
+            height: 250px;
+            background-color: lightgray;
+            margin-left: 50px;
+            margin-top: 25px;
+            display: block;
+          "
+          aria-hidden="true"
+        ></i>
+        <input
+          id="2"
+          style="display: none"
+          type="file"
+          class="form-control col-lg-2 col-md-2 col-sm-2"
+          (change)="onFileChange($event)"
+          accept="image/jpg"
+          required
+        />
+      </label>
+    </div>
+    <input
+      type="text"
+      class="form-control form-control-dark"
+      style="margin-top: 22px"
+      placeholder="Référence"
+      readonly
+      [value]="ref"
+      required
+    />
+  </div>
+</form>
+<div class="row fournisseur" *ngFor="let fournisseur of fournisseurs">
+  <span class="name" (click)="selectFournisseur(fournisseur)">{{ fournisseur.nom}}</span>
+</div>
