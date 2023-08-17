@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CategorieService } from '../../services/categorie.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
+import { Fournisseur } from 'src/app/interface/Fournisseurs';
 
 @Component({
   selector: 'app-form',
@@ -16,7 +17,7 @@ export class FormComponent implements OnInit {
   @Input() imageEnBase64: string = '';
   @Input() getSelectedCategory: string = '';
   @Input() extensionsAutorised = ['jpg', 'jpeg', 'png', 'jfif'];
-  @Input() filteredFournisseurs: string[] = [];
+  @Input() filteredFournisseurs: Fournisseur[] = [];
   @Input() libelleValue: string = '';
   @Input() libCode: string = '';
   @Input() ref: string = 'REF-';
@@ -41,15 +42,14 @@ export class FormComponent implements OnInit {
 
   selectedStyle = {
     background: 'gray',
+    color: 'white',
   };
 
   defaultStyle = {
-    background: '#333',
+    background: '#fff',
   };
   constructor() {}
   ngOnInit(): void {
-    // console.log(this.selectFournisseur);
-
     this.chargerCategorie();
   }
 }

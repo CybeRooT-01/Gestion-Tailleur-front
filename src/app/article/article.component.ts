@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CategorieService } from '../services/categorie.service';
 import { NgForm , FormControl} from '@angular/forms';
 import Swal from 'sweetalert2';
+import { Fournisseur } from '../interface/Fournisseurs';
+import { category } from '../interface/categories';
 
 @Component({
   selector: 'app-article',
@@ -10,19 +12,19 @@ import Swal from 'sweetalert2';
 })
 export class ArticleComponent implements OnInit {
   imageFile: any;
-  fournisseurs: any;
+  fournisseurs: Fournisseur[] = [];
   searchTerm: string = '';
   extension: string = '';
   pathToImage: string = '';
   imageEnBase64: string = '';
   getSelectedCategory: string = '';
   extensionsAutorised = ['jpg', 'jpeg', 'png', 'jfif'];
-  filteredFournisseurs: string[] = [];
+  filteredFournisseurs: Fournisseur[] = [];
   libelleValue: string = '';
   libCode: string = '';
   ref: string = 'REF-';
-  categories: any;
-  selectedFournisseurs: any[] = [];
+  categories: category[] = [];
+  selectedFournisseurs: number[] = [];
   num: number = 1;
   categoryId: number;
   prix: number = 0;
@@ -32,11 +34,10 @@ export class ArticleComponent implements OnInit {
   constructor(private categorieService: CategorieService) {}
   ngOnInit(): void {
     this.chargerCategorie();
-    // console.log(this.selectedFournisseurs);
   }
   categoryservice: CategorieService = this.categorieService;
 
-  onFileChange(event: any) {
+  onFileChange(event: { target: { files: ArrayBuffer[] } }) {
     console.log(this.libCode);
     this.imageFile = event.target.files[0];
     this.extension = this.imageFile.name.split('.')[1];
@@ -64,19 +65,18 @@ export class ArticleComponent implements OnInit {
       this.categories = data;
     });
   }
-  getAllFournisseur() {
+  getAllFournisseur(){
     this.categoryservice.getFournisseurs().subscribe((data) => {
       this.fournisseurs = data;
-      const filteredFournisseurs = this.fournisseurs.filter(
-        (fournisseur: any) => {
-          return fournisseur.nom
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase());
-        }
-      );
+      console.log(this.fournisseurs);
+
+      const filteredFournisseurs = this.fournisseurs.filter((fournisseur) => {
+        return fournisseur.nom
+          .toLowerCase()
+          .includes(this.searchTerm.toLowerCase());
+      });
       this.fournisseurs = filteredFournisseurs;
       this.filteredFournisseurs = filteredFournisseurs;
-      // console.log(this.fournisseurs);
       if (this.searchTerm == '') {
         this.fournisseurs = [];
         this.filteredFournisseurs = [];
@@ -84,15 +84,22 @@ export class ArticleComponent implements OnInit {
       console.log(this.filteredFournisseurs);
     });
   }
-  selectFournisseur(fournisseur: any) {
+  selectFournisseur(fournisseur: {
+    id: number;
+    nom: string;
+    selected: boolean;
+  }) {
     this.selectedFournisseurs.push(fournisseur.id);
     this.selectedFournisseursName.push(fournisseur.nom);
-
     console.log(this.selectedFournisseurs);
     fournisseur.selected = true;
     this.searchTerm = this.selectedFournisseursName.map((f) => f).join(', ');
   }
-  deselectFournisseur(fournisseur: any) {
+  deselectFournisseur(fournisseur: {
+    id: number;
+    selected: boolean;
+    nom: string;
+  }) {
     this.selectedFournisseurs = this.selectedFournisseurs.filter(
       (f) => f !== fournisseur.id
     );
@@ -113,10 +120,10 @@ export class ArticleComponent implements OnInit {
     ref += '-' + this.num;
     this.ref = ref;
   }
-  onCategoryChange(event) {
+  onCategoryChange(event: { target: { options: { selectedIndex: number } } }) {
     this.categoryId = event.target.options.selectedIndex;
   }
-  ajouterArticle(form: NgForm) {
+  ajouterArticle() {
     const data = {
       libelle: this.libelleValue,
       reference: this.ref,

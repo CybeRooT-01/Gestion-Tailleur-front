@@ -10,7 +10,7 @@
       <input
         type="text"
         id="libelle"
-        class="form-control    mb-2"
+        class="form-control mb-2"
         placeholder="Libellé"
         [(ngModel)]="libelleValue"
         name="libelleValue"
@@ -20,12 +20,11 @@
         minlength="4"
         required
       />
-
       <label for="prix" class=" ">Prix:</label>
       <input
         type="text"
         id="prix"
-        class="form-control    mb-2"
+        class="form-control mb-2"
         placeholder="Prix"
         autocomplete="off"
         name="prix"
@@ -47,13 +46,14 @@
       <select
         type="text"
         id="categorie"
-        class="form-control    mb-2"
+        class="form-control mb-2"
         placeholder="Catégorie"
         [(ngModel)]="getSelectedCategory"
         name="selectedCategory"
         (change)="updateref()"
         (change)="onCategoryChange($event)"
       >
+        <option value="">Selectionnez une categorie</option>
         <option
           *ngFor="let cat of categories"
           [value]="cat.libelle"
@@ -77,13 +77,7 @@
         autocomplete="off"
         required
       />
-      <button
-        class="btn btn-primary"
-        (click)="ajouterArticle()"
-        [disabled]="!f.valid"
-      >
-        Enregistrer
-      </button>
+      <button class="btn btn-primary" [disabled]="!f.valid">Enregistrer</button>
     </div>
   </div>
   <div class="col-md-6">
@@ -116,7 +110,7 @@
     </div>
     <input
       type="text"
-      class="form-control   "
+      class="form-control"
       style="margin-top: 22px"
       placeholder="Référence"
       readonly

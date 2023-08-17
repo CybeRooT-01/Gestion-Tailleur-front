@@ -188,5 +188,6 @@ export class CategorieComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.getCategorie().unsubscribe();
+    
   }
 }
