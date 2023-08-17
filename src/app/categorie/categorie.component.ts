@@ -61,6 +61,11 @@ export class CategorieComponent implements OnInit, OnDestroy {
   }
   checkName(name: string) {
     let todisable = document.querySelector('.todisable') as HTMLButtonElement;
+    let input = document.querySelector('.input') as HTMLInputElement;
+    if (input.value.length < 3) {
+      todisable.disabled = true;
+    }
+    
     if (!this.ajout) {
       this.state = this.categorieNames.find((n) => n == name) != null;
       if (!this.state) {

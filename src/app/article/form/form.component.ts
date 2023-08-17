@@ -8,7 +8,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
   styleUrls: ['./form.component.css'],
 })
 export class FormComponent implements OnInit {
-  @Input() imageFile: any;
+  @Input() imageFile: ArrayBuffer;
   @Input() fournisseurs: any;
   @Input() extension: string = '';
   @Input() searchTerm: string = '';

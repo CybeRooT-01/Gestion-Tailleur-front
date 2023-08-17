@@ -1,11 +1,16 @@
-<form class="row border mt-3" style="width: 700px" #f="ngForm">
+<form
+  (ngSubmit)="ajouterArticle(f)"
+  class="row border mt-3"
+  style="width: 700px"
+  #f="ngForm"
+>
   <div class="col-md-6">
     <div class="form-group" style="margin-bottom: 10px">
-      <label for="libelle" class="text-white">Libellé:</label>
+      <label for="libelle" class=" ">Libellé:</label>
       <input
         type="text"
         id="libelle"
-        class="form-control form-control-dark mb-2"
+        class="form-control    mb-2"
         placeholder="Libellé"
         [(ngModel)]="libelleValue"
         name="libelleValue"
@@ -16,51 +21,53 @@
         required
       />
 
-      <label for="prix" class="text-white">Prix:</label>
+      <label for="prix" class=" ">Prix:</label>
       <input
         type="text"
         id="prix"
-        class="form-control form-control-dark mb-2"
+        class="form-control    mb-2"
         placeholder="Prix"
         autocomplete="off"
         name="prix"
         [(ngModel)]="prix"
         required
       />
-
-      <label for="stock" class="text-white">Stock:</label>
+      <label for="stock" class=" ">Stock:</label>
       <input
         type="text"
         id="stock"
-        class="form-control form-control-dark mb-2"
+        class="form-control mb-2"
         placeholder="Stock"
         autocomplete="off"
         name="stock"
         [(ngModel)]="stock"
         required
       />
-
-      <label for="categorie" class="text-white">Catégorie:</label>
+      <label for="categorie" class=" ">Catégorie:</label>
       <select
         type="text"
         id="categorie"
-        class="form-control form-control-dark mb-2"
+        class="form-control    mb-2"
         placeholder="Catégorie"
         [(ngModel)]="getSelectedCategory"
         name="selectedCategory"
         (change)="updateref()"
         (change)="onCategoryChange($event)"
       >
-        <option *ngFor="let cat of categories" [value]="cat.libelle" [id]="cat.id">
+        <option
+          *ngFor="let cat of categories"
+          [value]="cat.libelle"
+          [id]="cat.id"
+        >
           {{ cat.libelle }}
         </option>
       </select>
 
-      <label for="fournisseur" class="text-white">Fournisseur:</label>
+      <label for="fournisseur" class=" ">Fournisseur:</label>
       <input
         type="text"
         id="fournisseur"
-        class="form-control form-control-dark mb-2"
+        class="form-control mb-2"
         placeholder="Fournisseur"
         [(ngModel)]="searchTerm"
         name="searchTerm"
@@ -70,8 +77,10 @@
         autocomplete="off"
         required
       />
-      <button class="btn btn-primary" (click)="ajouterArticle()"
-      [disabled]="!f.valid"
+      <button
+        class="btn btn-primary"
+        (click)="ajouterArticle()"
+        [disabled]="!f.valid"
       >
         Enregistrer
       </button>
@@ -107,7 +116,7 @@
     </div>
     <input
       type="text"
-      class="form-control form-control-dark"
+      class="form-control   "
       style="margin-top: 22px"
       placeholder="Référence"
       readonly
@@ -117,7 +126,14 @@
   </div>
 </form>
 <div class="row fournisseur" *ngFor="let fournisseur of fournisseurs">
-  <span  [ngStyle]="fournisseur.selected ? selectedStyle : defaultStyle" class="name"   (click)="fournisseur.selected ? 
-    deselectFournisseur(fournisseur) :
-    selectFournisseur(fournisseur)">{{ fournisseur.nom}}</span>
+  <span
+    [ngStyle]="fournisseur.selected ? selectedStyle : defaultStyle"
+    class="name"
+    (click)="
+      fournisseur.selected
+        ? deselectFournisseur(fournisseur)
+        : selectFournisseur(fournisseur)
+    "
+    >{{ fournisseur.nom }}</span
+  >
 </div>

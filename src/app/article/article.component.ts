@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategorieService } from '../services/categorie.service';
-import { NgForm } from '@angular/forms';
+import { NgForm , FormControl} from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -22,7 +22,6 @@ export class ArticleComponent implements OnInit {
   libCode: string = '';
   ref: string = 'REF-';
   categories: any;
-  // selectedFournisseur: any = [];
   selectedFournisseurs: any[] = [];
   num: number = 1;
   categoryId: number;
@@ -117,7 +116,7 @@ export class ArticleComponent implements OnInit {
   onCategoryChange(event) {
     this.categoryId = event.target.options.selectedIndex;
   }
-  ajouterArticle() {
+  ajouterArticle(form: NgForm) {
     const data = {
       libelle: this.libelleValue,
       reference: this.ref,
