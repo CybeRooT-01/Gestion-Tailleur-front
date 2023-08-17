@@ -1,13 +1,14 @@
 <form
-  (ngSubmit)="ajouterArticle(f)"
   class="row border mt-3"
   style="width: 700px"
   #f="ngForm"
+  (ngSubmit)="check(f)"
 >
   <div class="col-md-6">
     <div class="form-group" style="margin-bottom: 10px">
       <label for="libelle" class=" ">Libellé:</label>
       <input
+        [formControl]="libelle"
         type="text"
         id="libelle"
         class="form-control mb-2"
@@ -22,17 +23,19 @@
       />
       <label for="prix" class=" ">Prix:</label>
       <input
+        [formControl]="prixArticle"
         type="text"
         id="prix"
         class="form-control mb-2"
         placeholder="Prix"
         autocomplete="off"
         name="prix"
-        [(ngModel)]="prix"
+
         required
       />
       <label for="stock" class=" ">Stock:</label>
       <input
+        [formControl]="stockArticle"
         type="text"
         id="stock"
         class="form-control mb-2"
@@ -77,6 +80,7 @@
         autocomplete="off"
         required
       />
+      <!--   -->
       <button class="btn btn-primary" [disabled]="!f.valid">Enregistrer</button>
     </div>
   </div>
@@ -113,7 +117,6 @@
       class="form-control"
       style="margin-top: 22px"
       placeholder="Référence"
-      readonly
       [value]="ref"
       required
     />
