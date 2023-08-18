@@ -42,7 +42,7 @@ export class FormComponent implements OnInit {
   constructor() {}
   ngOnInit(): void {
     this.chargerCategorie();
-    console.log(this.categoryservice);
+    // console.log(this.categoryservice);
   }
   getValue() {
     this.libCode =

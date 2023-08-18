@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { category } from '../interface/categories';
 import { Fournisseur } from '../interface/Fournisseurs';
+import { Articles } from '../interface/Article';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -35,6 +37,6 @@ export class CategorieService {
     );
   }
   getArticleFournisseurCategorie() {
-    return this._http.get(this.baseUrlAll);
+    return this._http.get<Articles[]>(this.baseUrlAll);
   }
 }

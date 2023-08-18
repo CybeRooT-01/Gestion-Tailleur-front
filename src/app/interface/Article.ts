@@ -1,4 +1,4 @@
-export interface Article {
+export interface Articles {
   id: number;
   libelle: string;
   prix: number;

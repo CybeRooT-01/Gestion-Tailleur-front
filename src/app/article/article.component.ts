@@ -30,7 +30,7 @@ export class ArticleComponent implements OnInit {
     this.categoryservice.addArticle(data).subscribe((data) => {
       if (data) {
         Swal.fire('Good job!', 'Categorie Ajouté avec success', 'success');
-      }
+      } 
     });
   }
 }

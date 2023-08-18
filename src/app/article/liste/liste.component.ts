@@ -1,6 +1,7 @@
 import { Component,Input, OnInit } from '@angular/core';
-import { Article } from 'src/app/interface/articles';
 import { CategorieService } from '../../services/categorie.service';
+import { Articles } from 'src/app/interface/Article';
+
 
 
 @Component({
@@ -9,9 +10,18 @@ import { CategorieService } from '../../services/categorie.service';
   styleUrls: ['./liste.component.css'],
 })
 export class ListeComponent implements OnInit {
+  articles: any;
+  @Input() categoryservice: CategorieService;
   ngOnInit(): void {
+    this.getDatas();
   }
-  constructor() { }
-  
+  constructor() {}
 
+  getDatas() {
+    this.categoryservice.getArticleFournisseurCategorie().subscribe((res) => {
+      this.articles = res;
+      this.articles = this.articles.articles;
+      console.log(this.articles.articles);
+    });
+  }
 }
