@@ -30,7 +30,6 @@
         placeholder="Prix"
         autocomplete="off"
         name="prix"
-
         required
       />
       <label for="stock" class=" ">Stock:</label>
@@ -67,21 +66,19 @@
       </select>
 
       <label for="fournisseur" class=" ">Fournisseur:</label>
-      <input
-        type="text"
-        id="fournisseur"
-        class="form-control mb-2"
-        placeholder="Fournisseur"
-        [(ngModel)]="searchTerm"
-        name="searchTerm"
-        (keyup)="getAllFournisseur()"
-        [value]=""
-        (input)="onInputChange()"
-        autocomplete="off"
-        required
-      />
-      <!--   -->
-      <button class="btn btn-primary" [disabled]="!f.valid">Enregistrer</button>
+      <ng-multiselect-dropdown
+        [placeholder]="'Sélectionnez des fournisseurs'"
+        [data]="fournisseurs"
+        [(ngModel)]="selectedFournisseursByLibs"
+        [settings]="dropdownSettings"
+        [ngModelOptions]="{ standalone: true }"
+        (onSelect)="onItemSelect($event)"
+        (onSelectAll)="onSelectAll($event)"
+        (onDeSelect)="onDeSelect($event)"
+      ></ng-multiselect-dropdown>
+      <button class="btn btn-primary mt-3" [disabled]="!f.valid">
+        Enregistrer
+      </button>
     </div>
   </div>
   <div class="col-md-6">
@@ -112,25 +109,15 @@
         />
       </label>
     </div>
+    <label for="reference" class=" ">Référence:</label>
     <input
+    id="reference"
       type="text"
       class="form-control"
-      style="margin-top: 22px"
       placeholder="Référence"
       [value]="ref"
       required
+      disabled
     />
   </div>
 </form>
-<div class="row fournisseur" *ngFor="let fournisseur of fournisseurs">
-  <span
-    [ngStyle]="fournisseur.selected ? selectedStyle : defaultStyle"
-    class="name"
-    (click)="
-      fournisseur.selected
-        ? deselectFournisseur(fournisseur)
-        : selectFournisseur(fournisseur)
-    "
-    >{{ fournisseur.nom }}</span
-  >
-</div>

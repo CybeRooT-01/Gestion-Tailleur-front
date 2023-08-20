@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CategorieService } from '../../services/categorie.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { Fournisseur } from 'src/app/interface/Fournisseurs';
-import { NgForm,FormControl } from '@angular/forms';
-
+import { NgForm, FormControl } from '@angular/forms';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -26,7 +26,9 @@ export class FormComponent implements OnInit {
   ref: string = 'REF-';
   extension: string = '';
   extensionsAutorised = ['jpg', 'jpeg', 'png', 'jfif'];
-  @Input() chargerCategorie: any;
+  dropdownSettings = {};
+  selectedFournisseursByLibs = [];
+  // selectedFournisseursByLibs = [];
 
   @Input() categoryservice: CategorieService;
   @Output() info = new EventEmitter();
@@ -39,10 +41,34 @@ export class FormComponent implements OnInit {
   defaultStyle = {
     background: '#fff',
   };
+  dropdownList = [];
+  selectedItems = [];
   constructor() {}
   ngOnInit(): void {
     this.chargerCategorie();
-    // console.log(this.categoryservice);
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'nom',
+      itemsShowLimit: 3,
+      allowSearchFilter: true,
+    };
+    this.getAllFournisseur();
+  }
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+  onDeSelect(item: any) {
+    console.log(item);
+  }
+  onFournisseursSelected() {
+    const selectedFournisseurIDs = this.selectedFournisseursByLibs.map(
+      (fournisseur) => fournisseur.id
+    );
+    console.log('IDs des fournisseurs sélectionnés :', selectedFournisseurIDs);
   }
   getValue() {
     this.libCode =
@@ -58,7 +84,7 @@ export class FormComponent implements OnInit {
     stock: 0,
   };
   onFileChange(event: any) {
-    console.log(this.libCode);
+    // console.log(this.libCode);
     this.imageFile = event.target.files[0];
 
     this.dataToInsert.image = this.imageFile;
@@ -82,28 +108,22 @@ export class FormComponent implements OnInit {
     this.categoryservice.getFournisseurs().subscribe((data) => {
       this.fournisseurs = data;
       console.log(this.fournisseurs);
-
-      const filteredFournisseurs = this.fournisseurs.filter((fournisseur) => {
-        return fournisseur.nom
-          .toLowerCase()
-          .includes(this.searchTerm.toLowerCase());
-      });
-      this.fournisseurs = filteredFournisseurs;
-      this.filteredFournisseurs = filteredFournisseurs;
-      if (this.searchTerm == '') {
-        this.fournisseurs = [];
-        this.filteredFournisseurs = [];
-      }
-      console.log(this.filteredFournisseurs);
     });
   }
   selectFournisseur(fournisseur: any) {
+    const nameFournisseurs = document.querySelector(
+      '.nameFournisseurs'
+    ) as HTMLElement;
     this.selectedFournisseurs.push(fournisseur.id);
     this.selectedFournisseursName.push(fournisseur.nom);
     console.log(this.selectedFournisseurs);
     fournisseur.selected = true;
+    nameFournisseurs.innerHTML = this.selectedFournisseursName
+      .map((f) => f)
+      .join(', ');
     this.searchTerm = this.selectedFournisseursName.map((f) => f).join(', ');
   }
+
   deselectFournisseur(fournisseur: any) {
     this.selectedFournisseurs = this.selectedFournisseurs.filter(
       (f) => f !== fournisseur.id
@@ -128,12 +148,20 @@ export class FormComponent implements OnInit {
   onCategoryChange(event: any) {
     this.categoryId = event.target.options.selectedIndex;
   }
+  chargerCategorie() {
+    this.categoryservice.getCategories().subscribe((data) => {
+      this.categories = data;
+      console.log(this.categories);
+    });
+  }
   libelle = new FormControl('');
   prixArticle = new FormControl('');
   stockArticle = new FormControl('');
   check(form: NgForm) {
+    const selectedFournisseurIDs = this.selectedFournisseursByLibs.map(
+      (fournisseur) => fournisseur.id
+    );
     console.log(this.ref);
-    
     const newLibelle = this.libelle.value;
     const newPrix = this.prixArticle.value;
     const newStock = this.stockArticle.value;
@@ -141,7 +169,7 @@ export class FormComponent implements OnInit {
     this.dataToInsert.prix = +newPrix;
     this.dataToInsert.stock = +newStock;
     this.dataToInsert.reference = this.ref;
-    this.dataToInsert.fournisseur = this.selectedFournisseurs;
+    this.dataToInsert.fournisseur = selectedFournisseurIDs;
     this.dataToInsert.image = this.imageFile;
     this.dataToInsert.categorie = this.categoryId;
     this.info.emit(this.dataToInsert);

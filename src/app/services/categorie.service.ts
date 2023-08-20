@@ -13,6 +13,7 @@ export class CategorieService {
   baseUrlFournisseurs = 'http://127.0.0.1:8000/api/fournisseur';
   baseUrlArticle = 'http://127.0.0.1:8000/api/articles';
   baseUrlAll = 'http://127.0.0.1:8000/api/articleFournisseurCategorie';
+  urlDelete = "http://127.0.0.1:8000/api/articles/"
   constructor(private _http: HttpClient) {}
 
   getCategories() {
@@ -39,4 +40,8 @@ export class CategorieService {
   getArticleFournisseurCategorie() {
     return this._http.get<Articles[]>(this.baseUrlAll);
   }
+  deleteArticle(id: number) {
+    return this._http.delete(`${this.urlDelete}/${id}`);
+  }
+
 }

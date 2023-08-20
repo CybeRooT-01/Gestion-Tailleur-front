@@ -12,25 +12,26 @@ import { category } from '../interface/categories';
 })
 export class ArticleComponent implements OnInit {
   categories: category[] = [];
+  articles: any;
 
   constructor(private categorieService: CategorieService) {}
   ngOnInit(): void {
-    this.chargerCategorie();
   }
   categoryservice: CategorieService = this.categorieService;
 
-  chargerCategorie() {
-    this.categoryservice.getCategories().subscribe((data) => {
-      this.categories = data;
-      console.log(this.categories);
-    });
-  }
   ajouterArticle(data : any) {
     console.log(data);
     this.categoryservice.addArticle(data).subscribe((data) => {
       if (data) {
-        Swal.fire('Good job!', 'Categorie Ajouté avec success', 'success');
+        Swal.fire('Good job!', 'Article Ajouté avec success', 'success');
       } 
+    });
+  }
+  supprimerArticle(id: number) {
+    this.categoryservice.deleteArticle(id).subscribe((data) => {
+      if (data) {
+        Swal.fire('Good job!', 'Article supprimé avec success', 'success');
+      }
     });
   }
 }
