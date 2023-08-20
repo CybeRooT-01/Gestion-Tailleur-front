@@ -18,6 +18,7 @@
             ></app-form>
             <app-liste
             [categoryservice]="categoryservice"
+            (info)="supprimerArticle($event)"
             ></app-liste>
         </div>
       </div>

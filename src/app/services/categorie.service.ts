@@ -41,7 +41,7 @@ export class CategorieService {
     return this._http.get<Articles[]>(this.baseUrlAll);
   }
   deleteArticle(id: number) {
-    return this._http.delete(`${this.urlDelete}/${id}`);
+    return this._http.delete(`${this.urlDelete}${id}`);
   }
 
 }

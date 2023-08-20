@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,Output,EventEmitter } from '@angular/core';
 
 
 @Component({
@@ -8,6 +8,9 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ItemComponent implements OnInit {
   @Input() articles: any;
+
+  @Output() info = new EventEmitter<number>();
+  
   constructor() {}
 
   ngOnInit(): void {}
@@ -32,6 +35,6 @@ export class ItemComponent implements OnInit {
   }
   supprimerDefinitivement(article) {
     this.clearCountdown(article);
-    console.log('supprimer');
+    this.info.emit(article.id);
   }
 }

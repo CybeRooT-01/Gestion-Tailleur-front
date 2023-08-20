@@ -15,22 +15,26 @@ export class ArticleComponent implements OnInit {
   articles: any;
 
   constructor(private categorieService: CategorieService) {}
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   categoryservice: CategorieService = this.categorieService;
 
-  ajouterArticle(data : any) {
+  ajouterArticle(data: any) {
     console.log(data);
     this.categoryservice.addArticle(data).subscribe((data) => {
       if (data) {
         Swal.fire('Good job!', 'Article Ajouté avec success', 'success');
-      } 
+        window.location.reload();
+      }
     });
   }
+  // checkIdToDelete(id: number) {
+  // console.log("bindeeeeed"+id);
+  // }
   supprimerArticle(id: number) {
     this.categoryservice.deleteArticle(id).subscribe((data) => {
       if (data) {
         Swal.fire('Good job!', 'Article supprimé avec success', 'success');
+        window.location.reload();
       }
     });
   }
