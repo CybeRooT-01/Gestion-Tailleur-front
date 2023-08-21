@@ -5,14 +5,13 @@
     <td style="margin-left: 0px">{{article.stock}}</td>
     <td>{{article.categorie.libelle}}</td>
     <td>
-      <button class="btn btn-sm btn-warning" style="margin-right: 15px">
+      <button class="btn btn-sm btn-warning editButton" style="margin-right: 15px"  (click)="onEditClick(article)" disabled>
         Edit
       </button>
       <button
         class="btn btn-sm btn-danger"
         (click)="confirmDelete(article)"
-        *ngIf="!article.confirmingDelete; else confirmingDelete"
-      >
+        *ngIf="!article.confirmingDelete; else confirmingDelete">
         Supprimer
       </button>
       <ng-template #confirmingDelete>

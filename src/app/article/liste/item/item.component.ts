@@ -1,6 +1,5 @@
 import { Component, Input, OnInit,Output,EventEmitter } from '@angular/core';
 
-
 @Component({
   selector: 'app-item',
   templateUrl: './item.component.html',
@@ -10,10 +9,16 @@ export class ItemComponent implements OnInit {
   @Input() articles: any;
 
   @Output() info = new EventEmitter<number>();
-  
+
+  @Output() info2 = new EventEmitter();
+
+  onEditClick(article) {
+    this.info2.emit(article);
+  }
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
   confirmDelete(article) {
     article.confirmingDelete = true;
     article.countdown = 3;
@@ -25,7 +30,6 @@ export class ItemComponent implements OnInit {
       }
     }, 1000);
     article.countdownInterval = countdownInterval;
-
     console.log('hello');
   }
   clearCountdown(article) {

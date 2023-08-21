@@ -31,6 +31,9 @@ export class CategorieService {
   PutCategrorie(data: any, id: number): Observable<any> {
     return this._http.put(`http://127.0.0.1:8000/api/categories/${id}`, data);
   }
+  PutArticle(data: any, id: number): Observable<any> {
+    return this._http.put(`http://127.0.0.1:8000/api/article/${id}`, data);
+  }
   DeleteCategorie(data: any): Observable<any> {
     return this._http.delete(
       'http://127.0.0.1:8000/api/categories/delete',

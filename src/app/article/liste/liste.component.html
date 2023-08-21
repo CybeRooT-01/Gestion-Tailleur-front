@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <app-item [articles]="articles" (info)="checkIdToDelete($event)"></app-item>
+      <app-item [articles]="articles" (info)="checkIdToDelete($event)" (info2)="dataToUpdate($event)"></app-item>
       <app-pagination></app-pagination>
     </tbody>
   </table>

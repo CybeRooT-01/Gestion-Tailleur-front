@@ -1,8 +1,7 @@
-import { Component,Input, OnInit,Output,EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CategorieService } from '../../services/categorie.service';
 import { Articles } from 'src/app/interface/Article';
-
-
+import { Fournisseur } from '../../interface/Fournisseurs';
 
 @Component({
   selector: 'app-liste',
@@ -12,6 +11,7 @@ import { Articles } from 'src/app/interface/Article';
 export class ListeComponent implements OnInit {
   articles: any;
   id: number;
+  article: any;
   @Output() info = new EventEmitter<number>();
   @Input() categoryservice: CategorieService;
   ngOnInit(): void {
@@ -23,14 +23,21 @@ export class ListeComponent implements OnInit {
     this.categoryservice.getArticleFournisseurCategorie().subscribe((res) => {
       this.articles = res;
       this.articles = this.articles.articles.reverse();
-      // console.log(this.articles.articles);
+      console.log(this.articles);
     });
   }
+  isEditMode: boolean = false;
+
+  @Output() info2 = new EventEmitter();
 
   checkIdToDelete(id: number) {
     this.id = id;
     this.info.emit(this.id);
-    // console.log("cet id laaaaaaaaaaaaaaa: " +id);
   }
-    
+
+  dataToUpdate(article) {
+    this.article = article;
+    this.info2.emit(this.article);
+    // console.log('cet article laaaaaaaaaaaaaaa: ' + article);
+  }
 }

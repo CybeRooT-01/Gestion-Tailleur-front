@@ -1,25 +1,31 @@
-<div class=" m-0 p-0 min-vh-100" style="padding-bottom: 10px">
+<div class="m-0 p-0 min-vh-100" style="padding-bottom: 10px">
   <div class="container box">
     <div
-      class="d-flex justify-content-center align-items-center border  "
-      style="width: 100vh; margin-left: 290px; height: 98vh">
-      <div class=" m-0 p-0 min-vh-100">
+      class="d-flex justify-content-center align-items-center border"
+      style="width: 100vh; margin-left: 290px; height: 98vh"
+    >
+      <div class="m-0 p-0 min-vh-100">
         <div class="container">
           <div class="row">
             <div
               class="col-md-12 d-flex justify-content-between"
-              style="margin-top: 10px">
+              style="margin-top: 10px"
+            >
               <h4 class="">Article</h4>
             </div>
+
           </div>
-            <app-form
+          <app-form
             [categoryservice]="categoryservice"
             (info)="ajouterArticle($event)"
-            ></app-form>
-            <app-liste
+            (info2)="updateArticle($event)"
+            [article]="article"
+          ></app-form>
+          <app-liste
             [categoryservice]="categoryservice"
             (info)="supprimerArticle($event)"
-            ></app-liste>
+            (info2)="getDataToUpdate($event)"
+          ></app-liste>
         </div>
       </div>
     </div>

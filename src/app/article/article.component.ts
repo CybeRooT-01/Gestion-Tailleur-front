@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CategorieService } from '../services/categorie.service';
 import { NgForm , FormControl} from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -13,11 +13,11 @@ import { category } from '../interface/categories';
 export class ArticleComponent implements OnInit {
   categories: category[] = [];
   articles: any;
-
+  article: any;
+  datas: any;
   constructor(private categorieService: CategorieService) {}
   ngOnInit(): void {}
   categoryservice: CategorieService = this.categorieService;
-
   ajouterArticle(data: any) {
     console.log(data);
     this.categoryservice.addArticle(data).subscribe((data) => {
@@ -27,9 +27,6 @@ export class ArticleComponent implements OnInit {
       }
     });
   }
-  // checkIdToDelete(id: number) {
-  // console.log("bindeeeeed"+id);
-  // }
   supprimerArticle(id: number) {
     this.categoryservice.deleteArticle(id).subscribe((data) => {
       if (data) {
@@ -38,4 +35,19 @@ export class ArticleComponent implements OnInit {
       }
     });
   }
+  getDataToUpdate(data: any) {
+    this.article = data;
+    let id = this.article.id;
+    console.log(this.article);
+  }
+  updateArticle(data: any) {
+    let id = this.article.id;
+    this.categoryservice.PutArticle(data, id).subscribe((data) => {
+      if (data) {
+        Swal.fire('Good job!', 'Article modifié avec success', 'success');
+        window.location.reload();
+      }
+    });
+  }
+    
 }

@@ -2,9 +2,20 @@
   class="row border mt-3"
   style="width: 700px"
   #f="ngForm"
-  (ngSubmit)="check(f)"
 >
+<div style=" position: absolute; top: 60px;left: 1000px; display: flex">
+  <span>Ajout</span>
+  <div class="form-check form-switch" style="align-items: center; ">
+    
+  
+    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" (change)="changeMode()">
+    
+    <label class="form-check-label" for="flexSwitchCheckDefault">Edit</label>
+  </div>
+</div>
+
   <div class="col-md-6">
+
     <div class="form-group" style="margin-bottom: 10px">
       <label for="libelle" class=" ">Libellé:</label>
       <input
@@ -20,6 +31,7 @@
         (keyup)="updateref()"
         minlength="4"
         required
+        value="{{article?.libelle}}"
       />
       <label for="prix" class=" ">Prix:</label>
       <input
@@ -31,6 +43,8 @@
         autocomplete="off"
         name="prix"
         required
+        value="{{article?.prix}}"
+
       />
       <label for="stock" class=" ">Stock:</label>
       <input
@@ -43,6 +57,8 @@
         name="stock"
         [(ngModel)]="stock"
         required
+        value="{{article?.stock}}"
+
       />
       <label for="categorie" class=" ">Catégorie:</label>
       <select
@@ -54,12 +70,13 @@
         name="selectedCategory"
         (change)="updateref()"
         (change)="onCategoryChange($event)"
+
       >
         <option value="">Selectionnez une categorie</option>
         <option
           *ngFor="let cat of categories"
           [value]="cat.libelle"
-          [id]="cat.id"
+          [id]="(cat.id !== null && cat.id !== undefined) ? cat.id : article?.categorie_id"
         >
           {{ cat.libelle }}
         </option>
@@ -76,7 +93,7 @@
         (onSelectAll)="onSelectAll($event)"
         (onDeSelect)="onDeSelect($event)"
       ></ng-multiselect-dropdown>
-      <button class="btn btn-primary mt-3" [disabled]="!f.valid">
+      <button class="btn btn-primary mt-3" [disabled]="!f.valid" (click)="ajouterOuModifierArticle()" >
         Enregistrer
       </button>
     </div>
@@ -84,7 +101,7 @@
   <div class="col-md-6">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
       <label class="btn-btn-default">
-        <img [src]="imageFile" id="preview" draggable="false" />
+        <img [src]="imageFile ? imageFile : article?.image" id="preview" draggable="false" />
         <i
           id="1"
           class="fa fa-upload fa-2x"
@@ -118,6 +135,7 @@
       [value]="ref"
       required
       disabled
+      value="{{article?.reference}}"
     />
   </div>
 </form>

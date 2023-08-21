@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CategorieService } from '../../services/categorie.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { Fournisseur } from 'src/app/interface/Fournisseurs';
-import { NgForm, FormControl } from '@angular/forms';
+import { NgForm, FormControl, FormGroup } from '@angular/forms';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 @Component({
   selector: 'app-form',
@@ -28,10 +28,15 @@ export class FormComponent implements OnInit {
   extensionsAutorised = ['jpg', 'jpeg', 'png', 'jfif'];
   dropdownSettings = {};
   selectedFournisseursByLibs = [];
+  isEditMode: boolean = false;
+  ajout: boolean = true;
+  edit: boolean = false;
+  @Input() article: any;
   // selectedFournisseursByLibs = [];
 
   @Input() categoryservice: CategorieService;
   @Output() info = new EventEmitter();
+  @Output() info2 = new EventEmitter();
 
   selectedStyle = {
     background: 'gray',
@@ -41,6 +46,29 @@ export class FormComponent implements OnInit {
   defaultStyle = {
     background: '#fff',
   };
+  showSaveButton = true;
+  changeMode() {
+    this.ajout = !this.ajout;
+    this.edit = !this.edit;
+    const editButton = document.querySelectorAll('.editButton');
+    if(this.edit){
+      editButton.forEach((btn: HTMLButtonElement) => {
+        btn.disabled = false;
+      });
+    } else {
+      editButton.forEach((btn: HTMLButtonElement) => {
+        btn.disabled = true;
+      });
+    }
+
+  }
+  //   EditOrAdd() {
+  //     const editButton = document.querySelectorAll('.editButton')
+  //     console.log(editButton);
+  // }
+  onEditClicked() {
+    this.showSaveButton = false;
+  }
   dropdownList = [];
   selectedItems = [];
   constructor() {}
@@ -123,6 +151,13 @@ export class FormComponent implements OnInit {
       .join(', ');
     this.searchTerm = this.selectedFournisseursName.map((f) => f).join(', ');
   }
+  ajouterOuModifierArticle() {
+    if (this.ajout) {
+      this.check();
+    } else {
+      this.modifierArticle();
+    }
+  }
 
   deselectFournisseur(fournisseur: any) {
     this.selectedFournisseurs = this.selectedFournisseurs.filter(
@@ -157,7 +192,15 @@ export class FormComponent implements OnInit {
   libelle = new FormControl('');
   prixArticle = new FormControl('');
   stockArticle = new FormControl('');
-  check(form: NgForm) {
+  check() {
+    this.dataEmitter();
+    this.info.emit(this.dataToInsert);
+  }
+  modifierArticle() {
+    this.dataEmitter();
+    this.info2.emit(this.dataToInsert);
+  }
+  dataEmitter() {
     const selectedFournisseurIDs = this.selectedFournisseursByLibs.map(
       (fournisseur) => fournisseur.id
     );
@@ -172,6 +215,5 @@ export class FormComponent implements OnInit {
     this.dataToInsert.fournisseur = selectedFournisseurIDs;
     this.dataToInsert.image = this.imageFile;
     this.dataToInsert.categorie = this.categoryId;
-    this.info.emit(this.dataToInsert);
   }
 }
