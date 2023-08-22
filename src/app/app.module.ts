@@ -10,7 +10,7 @@ import { ArticleComponent } from './article/article.component';
 import { FormComponent } from './article/form/form.component';
 import { ListeComponent } from './article/liste/liste.component';
 import { ItemComponent } from './article/liste/item/item.component';
-import { PaginationComponent } from './pagination/pagination.component';
+import { PaginationComponent } from './article/liste/pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ReactiveFormsModule } from '@angular/forms';

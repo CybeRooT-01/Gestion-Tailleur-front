@@ -3,7 +3,7 @@
   style="width: 700px"
   #f="ngForm"
 >
-<div style=" position: absolute; top: 60px;left: 1000px; display: flex">
+<div style="position: absolute; top: 60px;left: 1000px; display: flex; width: 100px;">
   <span>Ajout</span>
   <div class="form-check form-switch" style="align-items: center; ">
     
@@ -101,7 +101,8 @@
   <div class="col-md-6">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
       <label class="btn-btn-default">
-        <img [src]="imageFile ? imageFile : article?.image" id="preview" draggable="false" />
+        <img [src]="imageFile ? imageFile : (article?.image ? article.image : 'https://via.placeholder.com/250')" id="preview" draggable="false" />
+
         <i
           id="1"
           class="fa fa-upload fa-2x"

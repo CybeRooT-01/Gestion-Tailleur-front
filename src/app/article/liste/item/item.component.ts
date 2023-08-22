@@ -15,10 +15,13 @@ export class ItemComponent implements OnInit {
   onEditClick(article) {
     this.info2.emit(article);
   }
+  count: number = 0;
+  @Input() page: number;
+  tableSize: number = 3;
+  tableSizes: number[] = [3, 6, 9, 12];
   constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   confirmDelete(article) {
     article.confirmingDelete = true;
     article.countdown = 3;

@@ -7,14 +7,15 @@
       <tr class="d-flex" >
         <th scope="col" style="margin-left: 10px;">Article</th>
         <th scope="col"style="margin-left: 80px;">Prix</th>
+
         <th scope="col"style="margin-left: 60px;">Stock</th>
         <th scope="col"style="margin-left: 60px;">Catégorie</th>
         <th scope="col"style="margin-left: 120px;">Action</th>
       </tr>
     </thead>
     <tbody>
-      <app-item [articles]="articles" (info)="checkIdToDelete($event)" (info2)="dataToUpdate($event)"></app-item>
-      <app-pagination></app-pagination>
+      <app-item [page]="page"  [articles]="articles" (info)="checkIdToDelete($event)" (info2)="dataToUpdate($event)"></app-item>
+      <app-pagination [articles]="articles" (info)="page" (info3)="getActivePage($event)"></app-pagination>
     </tbody>
   </table>
 </div>
