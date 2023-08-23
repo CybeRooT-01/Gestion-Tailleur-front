@@ -4,6 +4,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { Fournisseur } from 'src/app/interface/Fournisseurs';
 import { NgForm, FormControl, FormGroup } from '@angular/forms';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -18,7 +19,7 @@ export class FormComponent implements OnInit {
   selectedFournisseurs: number[] = [];
   libelleValue: string = '';
   libCode: string = '';
-  fournisseurs: any;
+  fournisseurs: any[] = [];
   searchTerm: string = '';
   filteredFournisseurs: Fournisseur[] = [];
   selectedFournisseursName: string[] = [];
@@ -31,13 +32,19 @@ export class FormComponent implements OnInit {
   isEditMode: boolean = false;
   ajout: boolean = true;
   edit: boolean = false;
+  isAllSelected = false;
   @Input() article: any;
+  showFournisseursDiv = false;
   // selectedFournisseursByLibs = [];
 
   @Input() categoryservice: CategorieService;
   @Output() info = new EventEmitter();
   @Output() info2 = new EventEmitter();
-
+  fournisseurdivHidden = true;
+  toggleFournisseursDiv() {
+    this.showFournisseursDiv = !this.showFournisseursDiv;
+    console.log(this.showFournisseursDiv);
+  }
   selectedStyle = {
     background: 'gray',
     color: 'white',
@@ -51,7 +58,7 @@ export class FormComponent implements OnInit {
     this.ajout = !this.ajout;
     this.edit = !this.edit;
     const editButton = document.querySelectorAll('.editButton');
-    if(this.edit){
+    if (this.edit) {
       editButton.forEach((btn: HTMLButtonElement) => {
         btn.disabled = false;
       });
@@ -60,8 +67,15 @@ export class FormComponent implements OnInit {
         btn.disabled = true;
       });
     }
-
   }
+  search(event: any) {
+    let value = event.target.value;
+    this.filteredFournisseurs = this.fournisseurs.filter((fournisseur) =>
+      fournisseur.nom.toLowerCase().includes(value.toLowerCase())
+    );
+    console.log(this.filteredFournisseurs);
+  }
+
   //   EditOrAdd() {
   //     const editButton = document.querySelectorAll('.editButton')
   //     console.log(editButton);
@@ -83,9 +97,7 @@ export class FormComponent implements OnInit {
     };
     this.getAllFournisseur();
   }
-  onItemSelect(item: any) {
-    console.log(item);
-  }
+
   onSelectAll(items: any) {
     console.log(items);
   }
@@ -111,6 +123,59 @@ export class FormComponent implements OnInit {
     prix: 0,
     stock: 0,
   };
+  checkall(e: Event) {
+    const target = e.target as HTMLInputElement;
+    let tocheck = document.querySelectorAll('.tocheck');
+    if (target.checked) {
+      tocheck.forEach((check: HTMLInputElement) => {
+        check.checked = true;
+        this.selectedFournisseurs.push(+check.id);
+      });
+      console.log(this.selectedFournisseurs);
+    } else {
+      tocheck.forEach((check: HTMLInputElement) => {
+        check.checked = false;
+        this.selectedFournisseurs = [];
+      });
+      console.log(this.selectedFournisseurs);
+    }
+  }
+  onItemSelect(item: any) {
+    let toInsertName = document.querySelector('.toInsertName') as HTMLElement;
+    let btnToChekAll = document.getElementById('selectAll') as HTMLInputElement;
+    if (item.target.checked) {
+      let span = `<span class="bg-primary text-light" style="border-radius: 7px; margin:4px; padding:3px">${item.target.name}</span>`;
+      toInsertName.innerHTML += span;
+      console.log(item.target.name);
+
+      this.selectedFournisseurs.push(+item.target.id);
+      console.log(this.selectedFournisseurs);
+    } else {
+      //enlever le span
+      let spans = document.querySelectorAll('.toInsertName span');
+      spans.forEach((span: HTMLElement) => {
+        if (span.innerHTML === item.target.name) {
+          span.remove();
+        }
+      });
+      this.selectedFournisseurs = this.selectedFournisseurs.filter(
+        (id) => id !== +item.target.id
+      );
+      console.log(this.selectedFournisseurs);
+    }
+    if (this.selectedFournisseurs.length === this.fournisseurs.length) {
+      btnToChekAll.checked = true;
+    } else {
+      btnToChekAll.checked = false;
+    }
+  }
+  updateSelectAll() {
+    const selectedFournisseursIDs = this.fournisseurs
+      .filter((fournisseur) => fournisseur.selected)
+      .map((fournisseur) => fournisseur.id);
+    this.isAllSelected =
+      selectedFournisseursIDs.length === this.fournisseurs.length;
+  }
   onFileChange(event: any) {
     // console.log(this.libCode);
     this.imageFile = event.target.files[0];
@@ -135,22 +200,22 @@ export class FormComponent implements OnInit {
   getAllFournisseur() {
     this.categoryservice.getFournisseurs().subscribe((data) => {
       this.fournisseurs = data;
-      console.log(this.fournisseurs);
+      // console.log(this.fournisseurs);
     });
   }
-  selectFournisseur(fournisseur: any) {
-    const nameFournisseurs = document.querySelector(
-      '.nameFournisseurs'
-    ) as HTMLElement;
-    this.selectedFournisseurs.push(fournisseur.id);
-    this.selectedFournisseursName.push(fournisseur.nom);
-    console.log(this.selectedFournisseurs);
-    fournisseur.selected = true;
-    nameFournisseurs.innerHTML = this.selectedFournisseursName
-      .map((f) => f)
-      .join(', ');
-    this.searchTerm = this.selectedFournisseursName.map((f) => f).join(', ');
-  }
+  // selectFournisseur(fournisseur: any) {
+  //   const nameFournisseurs = document.querySelector(
+  //     '.nameFournisseurs'
+  //   ) as HTMLElement;
+  //   this.selectedFournisseurs.push(fournisseur.id);
+  //   this.selectedFournisseursName.push(fournisseur.nom);
+  //   console.log(this.selectedFournisseurs);
+  //   fournisseur.selected = true;
+  //   nameFournisseurs.innerHTML = this.selectedFournisseursName
+  //     .map((f) => f)
+  //     .join(', ');
+  //   this.searchTerm = this.selectedFournisseursName.map((f) => f).join(', ');
+  // }
   ajouterOuModifierArticle() {
     if (this.ajout) {
       this.check();
@@ -159,17 +224,17 @@ export class FormComponent implements OnInit {
     }
   }
 
-  deselectFournisseur(fournisseur: any) {
-    this.selectedFournisseurs = this.selectedFournisseurs.filter(
-      (f) => f !== fournisseur.id
-    );
-    console.log(this.selectedFournisseurs);
-    fournisseur.selected = false;
-    this.selectedFournisseursName = this.selectedFournisseursName.filter(
-      (f) => f !== fournisseur.nom
-    );
-    this.searchTerm = this.selectedFournisseursName.map((f) => f).join(', ');
-  }
+  // deselectFournisseur(fournisseur: any) {
+  //   this.selectedFournisseurs = this.selectedFournisseurs.filter(
+  //     (f) => f !== fournisseur.id
+  //   );
+  //   console.log(this.selectedFournisseurs);
+  //   fournisseur.selected = false;
+  //   this.selectedFournisseursName = this.selectedFournisseursName.filter(
+  //     (f) => f !== fournisseur.nom
+  //   );
+  //   this.searchTerm = this.selectedFournisseursName.map((f) => f).join(', ');
+  // }
   onInputChange() {
     this.selectedFournisseurs = [];
   }
@@ -186,7 +251,7 @@ export class FormComponent implements OnInit {
   chargerCategorie() {
     this.categoryservice.getCategories().subscribe((data) => {
       this.categories = data;
-      console.log(this.categories);
+      // console.log(this.categories);
     });
   }
   libelle = new FormControl('');
@@ -216,4 +281,15 @@ export class FormComponent implements OnInit {
     this.dataToInsert.image = this.imageFile;
     this.dataToInsert.categorie = this.categoryId;
   }
+  // after using reactive forms
+  articleForm = new FormGroup({
+    libelle: new FormControl(''),
+    prix: new FormControl(''),
+    stock: new FormControl(''),
+    categorie: new FormControl(''),
+    fournisseur: new FormControl(''),
+    image: new FormControl('')
+    
+  })
 }
+
