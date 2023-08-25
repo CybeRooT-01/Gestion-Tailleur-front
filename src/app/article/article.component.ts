@@ -79,8 +79,7 @@ export class ArticleComponent implements OnInit {
     this.categoryservice.PutArticle(data, id).subscribe((data) => {
       if (data) {
         Swal.fire('Good job!', 'Article modifié avec success', 'success');
-        // window.location.reload();
-        const toInsertRow = document.querySelector('.toInsertRow');
+        window.location.reload();
       }
     });
   }

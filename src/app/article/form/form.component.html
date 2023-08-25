@@ -1,4 +1,9 @@
-<form class="row border mt-3" style="width: 700px" #f="ngForm">
+<form
+  [formGroup]="ArticleForm"
+  class="row border mt-3"
+  style="width: 700px"
+  (ngSubmit)="ajouterOuModifierArticle()"
+>
   <div
     style="
       position: absolute;
@@ -23,49 +28,62 @@
 
   <div class="col-md-6">
     <div class="form-group" style="margin-bottom: 10px">
-      <label for="libelle" class=" ">Libellé:</label>
+      <label for="libelle" class=" ">Libellé:</label> &nbsp;
+      <span
+        *ngIf="libelle && libelle.invalid && libelle.touched"
+        class="text-danger">La libelle est obligatoire</span>
       <input
+        formControlName="libelle"
         type="text"
         id="libelle"
         class="form-control mb-2"
         placeholder="Libellé"
-        (input)="getValue()"
+        (input)="updateref($event)"
         autocomplete="off"
-        (keyup)="updateref()"
-        minlength="4"
-        required
-        value="{{ article?.libelle }}"
       />
       <label for="prix" class=" ">Prix:</label>
+      <span *ngIf="prix && prix.invalid && prix.touched" class="text-danger"
+        >Le prix est obligatoire</span
+      >
       <input
+        (input)="validate($event)"
+        formControlName="prix"
         type="text"
         id="prix"
         class="form-control mb-2"
         placeholder="Prix"
         autocomplete="off"
         name="prix"
-        required
-        value="{{ article?.prix }}"
       />
       <label for="stock" class=" ">Stock:</label>
+      <span *ngIf="stock && stock.invalid && stock.touched" class="text-danger"
+        >Le stock est obligatoire</span
+      >
       <input
-        [formControl]="stockArticle"
+        (input)="validate($event)"
+        formControlName="stock"
         type="text"
         id="stock"
         class="form-control mb-2"
         placeholder="Stock"
         autocomplete="off"
         name="stock"
-        required
-        value="{{ article?.stock }}"
       />
       <label for="categorie" class=" ">Catégorie:</label>
+      <span
+        *ngIf="categorie && categorie.invalid && categorie.touched"
+        class="text-danger"
+        >La categorie est obligatoire</span
+      >
       <select
         type="text"
         id="categorie"
         class="form-control mb-2"
         placeholder="Catégorie"
         name="selectedCategory"
+        formControlName="categorie"
+        (change)="getCategoryName($event)"
+        (change)="updateref($event)"
       >
         <option value="">Selectionnez une categorie</option>
         <option
@@ -75,14 +93,21 @@
             cat.id !== null && cat.id !== undefined
               ? cat.id
               : article?.categorie_id
-          "
-        >
+          ">
           {{ cat.libelle }}
         </option>
       </select>
       <label for="fournisseur" class="">Fournisseur:</label>
-      <div class="form-control mt-1" style="height: 37px; ;">
-        <span class="iconBizzar" style="display: inline-block; z-index: 100;" (click)="toggleFournisseursDiv()"
+      <span
+        *ngIf="selectedFournisseurs.length  == 0"
+        class="text-danger"
+        >Le fournisseur est obligatoire</span
+      >
+      <div class="form-control mt-1" style="height: 37px">
+        <span
+          class="iconBizzar"
+          style="display: inline-block; z-index: 100"
+          (click)="toggleFournisseursDiv()"
           >&#x25BC;</span
         >
         <div
@@ -102,7 +127,7 @@
             (change)="checkall($event)"
           />
           <label for="selectAll">check tout</label>
-          <hr />
+          <hr/>
           <input
             type="text"
             id="search"
@@ -115,6 +140,7 @@
           <div style="height: 140px; overflow-y: scroll">
             <div *ngFor="let fournisseur of filteredFournisseurs">
               <input
+              
                 type="checkbox"
                 id="{{ fournisseur.id }}"
                 name="{{ fournisseur.nom }}"
@@ -128,13 +154,10 @@
       </div>
       <button
         class="btn btn-primary mt-3"
-        [disabled]="!f.valid"
-        (click)="ajouterOuModifierArticle()"
         style="position: relative; z-index: 0"
-      >
+        [disabled]="ArticleForm.invalid">
         Enregistrer
       </button>
-
       <!-- <ng-multiselect-dropdown
         [placeholder]="'Sélectionnez des fournisseurs'"
         [data]="fournisseurs"
@@ -188,14 +211,15 @@
     </div>
     <label for="reference" class=" ">Référence:</label>
     <input
+      readonly
       id="reference"
       type="text"
       class="form-control"
       placeholder="Référence"
       [value]="ref"
       required
-      disabled
       value="{{ article?.reference }}"
+      formControlName="reference"
     />
   </div>
 </form>

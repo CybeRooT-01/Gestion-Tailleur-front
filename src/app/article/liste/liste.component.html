@@ -13,7 +13,7 @@
         <th scope="col"style="margin-left: 120px;">Action</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody >
       <app-item [page]="page"  [articles]="articles" (info)="checkIdToDelete($event)" (info2)="dataToUpdate($event)"></app-item>
       <app-pagination [articles]="articles" (info)="page" (info3)="getActivePage($event)"></app-pagination>
     </tbody>
