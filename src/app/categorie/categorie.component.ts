@@ -9,7 +9,7 @@ import { category } from '../interface/categories';
 export class CategorieComponent implements OnInit, OnDestroy {
   ajout: boolean = false;
   edit: boolean = true;
-  categories:category[]= [];
+  categories: category[] = [];
   page: number = 1;
   count: number = 0;
   tableSize: number = 5;
@@ -22,11 +22,16 @@ export class CategorieComponent implements OnInit, OnDestroy {
   checkAllValue = false;
   categorieNames: string[] = [];
   state: boolean = false;
-  last:string='';
+  last: string = '';
+  typeCategorie: string = '';
   constructor(private categorieservice: CategorieService) {}
 
   ngOnInit(): void {
     this.getCategorie();
+  }
+  checkType(event:any) {
+    let value = event.target.value;
+    this.typeCategorie = value;
   }
 
   changeMode() {
@@ -45,7 +50,7 @@ export class CategorieComponent implements OnInit, OnDestroy {
     return this.categorieservice.getCategories().subscribe(
       (res) => {
         this.categories = res;
-        this.categories.reverse()
+        this.categories.reverse();
         console.log(this.categories);
 
         this.categorieNames = this.categories.map(
@@ -65,13 +70,13 @@ export class CategorieComponent implements OnInit, OnDestroy {
     if (input.value.length < 3) {
       todisable.disabled = true;
     }
-    
+
     if (!this.ajout) {
       this.state = this.categorieNames.find((n) => n == name) != null;
       if (!this.state) {
         todisable.disabled = false;
       } else {
-        todisable.disabled = true
+        todisable.disabled = true;
       }
     } else {
       todisable.disabled = false;
@@ -110,8 +115,10 @@ export class CategorieComponent implements OnInit, OnDestroy {
   ajouterCategorie() {
     const data = {
       libelle: this.libelle,
+      type_categorie: this.typeCategorie,
     };
-
+    console.log(data);
+    
     this.categorieservice.PostCategorie(data).subscribe(
       (res) => {
         console.log(res);
@@ -135,7 +142,6 @@ export class CategorieComponent implements OnInit, OnDestroy {
         let elem = document.getElementById(this.categoryId.toString());
         elem.innerHTML = this.libelle;
         console.log(res.message);
-        
       });
   }
   onItemCheckboxChange(id: number) {
@@ -166,7 +172,7 @@ export class CategorieComponent implements OnInit, OnDestroy {
     };
     this.categorieservice.DeleteCategorie(options).subscribe((res) => {
       console.log(res);
-        this.getCategorie();
+      this.getCategorie();
     });
   }
   checkall(e: Event) {
@@ -188,6 +194,5 @@ export class CategorieComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.getCategorie().unsubscribe();
-    
   }
 }

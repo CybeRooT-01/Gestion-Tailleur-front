@@ -2,8 +2,7 @@
   [formGroup]="ArticleForm"
   class="row border mt-3"
   style="width: 700px"
-  (ngSubmit)="ajouterOuModifierArticle()"
->
+  (ngSubmit)="ajouterOuModifierArticle()">
   <div
     style="
       position: absolute;
@@ -42,9 +41,7 @@
         autocomplete="off"
       />
       <label for="prix" class=" ">Prix:</label>
-      <span *ngIf="prix && prix.invalid && prix.touched" class="text-danger"
-        >Le prix est obligatoire</span
-      >
+      <span *ngIf="prix && prix.invalid && prix.touched" class="text-danger">Le prix est obligatoire</span>
       <input
         (input)="validate($event)"
         formControlName="prix"
@@ -158,24 +155,13 @@
         [disabled]="ArticleForm.invalid">
         Enregistrer
       </button>
-      <!-- <ng-multiselect-dropdown
-        [placeholder]="'Sélectionnez des fournisseurs'"
-        [data]="fournisseurs"
-        [(ngModel)]="selectedFournisseursByLibs"
-        [settings]="dropdownSettings"
-        [ngModelOptions]="{ standalone: true }"
-        (onSelect)="onItemSelect($event)"
-        (onSelectAll)="onSelectAll($event)"
-        (onDeSelect)="onDeSelect($event)"
-      ></ng-multiselect-dropdown> -->
     </div>
   </div>
   <div class="col-md-6">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
       <label class="btn-btn-default">
         <img
-          [src]="
-            imageFile
+          [src]="imageFile
               ? imageFile
               : article?.image
               ? article.image

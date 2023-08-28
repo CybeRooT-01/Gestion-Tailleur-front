@@ -1,0 +1,20 @@
+<div class="toInsertRow">
+  <div *ngFor="let article of ArticleVente.reverse()
+          let i = index" >
+    <tr class="d-flex justify-content-between" id="{{article.id}}">
+      <td>{{article.libelle}}</td>
+      <!-- <td>{{article.prix}}</td>
+      <td style="margin-left: 0px">{{article.stock}}</td>
+      <td>{{article.categorie.libelle}}</td> -->
+      <td>
+        <button class="btn btn-sm btn-warning editButton" style="margin-right: 15px" disabled>
+          Edit
+        </button>
+        <button class="btn btn-sm btn-danger editButton" style="margin-right: 15px" disabled>
+          supprimer
+        </button>
+      </td>
+    </tr>
+  </div>
+</div>
+

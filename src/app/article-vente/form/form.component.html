@@ -1,0 +1,226 @@
+<form
+  class="row border mt-3"
+  style="width: 700px"
+  [formGroup]="formArticleVente"
+  (ngSubmit)="ajouterOuModifierArticle()"
+>
+  <div
+    style="
+      position: absolute;
+      top: 60px;
+      left: 1000px;
+      display: flex;
+      width: 100px;
+    "
+  >
+    <span>Ajout</span>
+    <div class="form-check form-switch" style="align-items: center">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        role="switch"
+        id="flexSwitchCheckDefault"
+        (change)="changeMode()"
+      />
+      <label class="form-check-label" for="flexSwitchCheckDefault">Edit</label>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group" style="margin-bottom: 10px">
+      <label for="libelle" class=" ">Libellé:</label> &nbsp;
+      <span class="text-danger">La libelle est obligatoire</span>
+      <input
+        formControlName="libelle"
+        type="text"
+        id="libelle"
+        class="form-control mb-2"
+        placeholder="Libellé"
+        autocomplete="off"
+        (input)="updateref($event)"
+      />
+      <label for="categorie" class=" ">Catégorie:</label>
+      <span class="text-danger">La categorie est obligatoire</span>
+      <select
+        type="text"
+        id="categorie"
+        class="form-control mb-2"
+        placeholder="Catégorie"
+        name="selectedCategory"
+        formControlName="categorie"
+        (change)="getCategory($event)"
+        (change)="updateref($event)"
+      >
+        <option value="">Selectionnez une categorie</option>
+        <option *ngFor="let category of Categories" [value]="category.id">
+          {{ category.libelle }}
+        </option>
+      </select>
+      <div
+        class="form-check d-flex justify-content-between"
+        style="height: 20px"
+      >
+        <div>
+          <label class="form-check-label" for="flexCheckDefault"> Promo </label>
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="flexCheckDefault"
+            (change)="toggleInput()"
+          />
+        </div>
+        <input
+          *ngIf="showInput"
+          type="text"
+          class="form-control"
+          style="width: 200px; height: 28px"
+          placeholder="Prix Promo"
+          formControlName="promo"
+          (input)="validate($event)"
+        />
+      </div>
+      <div style="margin-top: 10px">
+        <label class=" ">Liste Des articles de confections</label>
+        <table class="table" formArrayName="article">
+          <thead>
+            <tr>
+              <th scope="col">Libelle</th>
+              <th scope="col">Quantite</th>
+              <th
+                style="cursor: pointer; position: relative; right: 10px"
+                (click)="ajouterArticle()"
+              >
+                +
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            *ngFor="let article of articleControl.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <tr>
+              <td>
+                <input
+                  formControlName="libelle"
+                  type="text"
+                  style="width: 150px"
+                  class="form-control"
+                  placeholder="libelle"
+                  (input)="filterArticle($event, i)"
+                  [value]="searchTerms[i]"
+                />
+              </td>
+              <div
+                *ngIf="filteredArticles[i]?.length > 0"
+                style="
+                  background-color: rgb(228, 223, 223);
+                  height: 100px;
+                  width: 145px;
+                  position: absolute;
+                  left: 445px;
+                  top: 370px;
+                "
+              >
+                <ul style="padding: 0; margin: 0">
+                  <li
+                    (click)="setSearchTerm(article.libelle, i)"
+                    *ngFor="let article of filteredArticles[i]"
+                    class="article"
+                  >
+                    {{ article.libelle }}
+                  </li>
+                </ul>
+              </div>
+              <td>
+                <input
+                  formControlName="quantite"
+                  type="text"
+                  style="width: 150px"
+                  class="form-control"
+                  placeholder="quantite"
+                  (input)="validate($event)"
+                  (input)="calculCoutFabrication($event, i)"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <label class=" ">Marge Article</label>
+      <input
+        type="text"
+        class="form-control"
+        (input)="validate($event)"
+        formControlName="marge"
+        (input)="calculPrixVente($event)"
+      />
+      <label class=" ">Prix Vente</label>
+      <input
+        type="text"
+        class="form-control"
+        readonly
+        formControlName="prix_vente"
+        [value]="prixDeVente"
+      />
+      <button
+        class="btn btn-primary mt-3"
+        style="position: relative; z-index: 0"
+        [disabled]="formArticleVente.invalid"
+      >
+        Enregistrer
+      </button>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <label class="btn-btn-default">
+        <img
+          id="preview"
+          draggable="false"
+          [src]="imageFile ? imageFile : 'https://via.placeholder.com/250'"
+        />
+        <i
+          id="1"
+          class="fa fa-upload fa-2x"
+          style="
+            width: 250px;
+            height: 250px;
+            background-color: lightgray;
+            margin-left: 50px;
+            margin-top: 25px;
+            display: block;
+          "
+          aria-hidden="true"
+        ></i>
+        <input
+          id="2"
+          style="display: none"
+          type="file"
+          class="form-control col-lg-2 col-md-2 col-sm-2"
+          (change)="onFileChange($event)"
+          accept="image/jpg"
+          required
+        />
+      </label>
+    </div>
+    <label for="reference" class=" ">Référence:</label>
+    <input
+      readonly
+      id="reference"
+      type="text"
+      class="form-control"
+      placeholder="Référence"
+      required
+      formControlName="reference"
+    />
+    <label class=" ">Cout de fabrication</label>
+    <input
+      type="text"
+      class="form-control"
+      readonly
+      formControlName="cout_fabrication"
+      [value]="coutFabrication"
+    />
+  </div>
+</form>

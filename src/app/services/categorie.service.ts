@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { category } from '../interface/categories';
 import { Fournisseur } from '../interface/Fournisseurs';
 import { Articles } from '../interface/Article';
+import { RestService } from './rest-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +15,12 @@ export class CategorieService {
   baseUrlArticle = 'http://127.0.0.1:8000/api/articles';
   baseUrlAll = 'http://127.0.0.1:8000/api/articleFournisseurCategorie';
   urlDelete = "http://127.0.0.1:8000/api/articles/"
-  constructor(private _http: HttpClient) {}
 
+  constructor(private _http: HttpClient) {}
   getCategories() {
     return this._http.get<category[]>(this.baseUrl);
   }
+ 
   getFournisseurs() {
     return this._http.get<Fournisseur[]>(this.baseUrlFournisseurs);
   }

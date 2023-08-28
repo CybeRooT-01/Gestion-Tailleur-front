@@ -190,8 +190,6 @@ export class FormComponent implements OnInit, OnChanges {
       let span = `<span class="bg-primary text-light" style="border-radius: 7px; margin:4px; padding:3px">${element.nom}</span>`;
       toInsertName.innerHTML += span;
     });
-    // console.log(this.selectedFournisseurs);
-    // console.log(this.ArticleForm.value);
   }
 
   chargerCategorie() {
@@ -227,7 +225,6 @@ export class FormComponent implements OnInit, OnChanges {
 
     this.ArticleForm.patchValue({ fournisseur: fournisseursIds });
     this.ArticleForm.patchValue({ categorie: CategorieId });
-    // console.log(this.ArticleForm.value);
     this.info2.emit(this.ArticleForm.value);
     
   }
@@ -243,7 +240,6 @@ export class FormComponent implements OnInit, OnChanges {
   getCategoryName(event: any) {
     const selectedCategory = event.target.value;
     this.categoryname = selectedCategory;
-    console.log(selectedCategory);
   }
   ArticleForm = new FormGroup({
     libelle: new FormControl('', Validators.required),
