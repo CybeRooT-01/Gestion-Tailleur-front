@@ -1,24 +1,24 @@
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  SimpleChanges,
   Output,
-  EventEmitter,
+  SimpleChanges,
 } from '@angular/core';
-import Swal from 'sweetalert2';
 import {
-  FormBuilder,
-  FormGroup,
   FormArray,
+  FormBuilder,
   FormControl,
+  FormGroup,
   Validators,
 } from '@angular/forms';
-import { category } from 'src/app/interface/categories';
-import { ArticleVenteValidator } from 'src/app/validators/articleVenteValidator';
 import { Article } from 'src/app/interface/articles';
+import { category } from 'src/app/interface/categories';
 import { ImageService } from 'src/app/services/image.service';
+import { ArticleVenteValidator } from 'src/app/validators/articleVenteValidator';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-vente',
@@ -37,14 +37,14 @@ export class FormComponent implements OnInit, OnChanges {
   num: number = 1;
   @Input() articles: Article[] = [];
   @Input() ArticleToEdit: any;
-
+  maxMarge: number = 0;
   constructor(private fb: FormBuilder, private imageService: ImageService) {
     this.formArticleVente = this.fb.group({
       libelle: new FormControl('', [Validators.required]),
       id: new FormControl(),
-      promo: new FormControl(0, [Validators.min(1), Validators.max(100)]),
+      promo: new FormControl(0, [Validators.min(0), Validators.max(100)]),
       categorie: new FormControl(''),
-      marge: new FormControl(0),
+      marge: new FormControl(0,[Validators.required]),
       reference: new FormControl(''),
       image: new FormControl(''),
       cout_fabrication: new FormControl(0),
@@ -53,6 +53,9 @@ export class FormComponent implements OnInit, OnChanges {
         validators: [ArticleVenteValidator.validArticleArrayItems],
       }),
     });
+  }
+  get marge() {
+    return this.formArticleVente.get('marge');
   }
   get promo() {
     return this.formArticleVente.get('promo');
@@ -91,9 +94,21 @@ export class FormComponent implements OnInit, OnChanges {
       cout_fabrication: this.coutFabrication,
     });
   }
+
   prixDeVente: number = 0;
   calculPrixVente(event: Event) {
+    this.maxMarge = this.coutFabrication / 3;
     let valueInput = (event.target as HTMLInputElement).value;
+    if (Number(valueInput) > this.maxMarge) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `vous ne pouvez pas mettre une marge supérieur à ${this.maxMarge}`,
+      });
+      this.formArticleVente.get('marge').setErrors({ invalidMarge: true });
+      return;
+
+    }
     this.prixDeVente = this.coutFabrication + Number(valueInput);
     this.formArticleVente.patchValue({ prix_vente: this.prixDeVente });
   }

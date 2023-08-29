@@ -65,7 +65,7 @@
           {{ category.libelle }}
         </option>
       </select>
-      <span  *ngIf="promo && promo.invalid && promo.touched" class="text-danger"
+      <span *ngIf="promo && promo.invalid && promo.touched" class="text-danger"
         >Le promo doit etre compris entre 1 et 100</span
       >
       <div
@@ -162,6 +162,9 @@
       </div>
 
       <label class=" ">Marge Article</label>
+      <span class="text-danger" *ngIf="marge && marge.invalid && marge.touched"
+        >La marge est obligatoire</span
+      >
       <input
         type="text"
         class="form-control"
