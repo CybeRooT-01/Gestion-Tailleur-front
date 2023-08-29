@@ -65,8 +65,8 @@ export class FormComponent implements OnInit, OnChanges {
   }
   createArticleFormGroup(): FormGroup {
     return this.fb.group({
-      libelle: [''],
-      quantite: [''],
+      libelle: ['', [Validators.required]],
+      quantite: ['', [Validators.required]],
       id: [''],
     });
   }
@@ -227,6 +227,15 @@ export class FormComponent implements OnInit, OnChanges {
 
   ajouterArticle() {
     const articles = this.formArticleVente.get('article') as FormArray;
+    if (!articles.at(articles.length - 1).valid) {
+       Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Vous devez remplir le champ précédent',
+       });
+      return
+    }
+    
     articles.push(this.createArticleFormGroup());
   }
 
