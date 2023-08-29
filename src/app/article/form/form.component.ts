@@ -193,7 +193,7 @@ export class FormComponent implements OnInit, OnChanges {
   }
 
   chargerCategorie() {
-    this.categoryservice.getCategories().subscribe((data) => {
+    this.categoryservice.getCategoriesConf().subscribe((data) => {
       this.categories = data;
     });
   }
@@ -209,8 +209,6 @@ export class FormComponent implements OnInit, OnChanges {
     this.ArticleForm.patchValue({ categorie: +this.categoryId });
     this.ArticleForm.patchValue({ prix: +prixValue });
     this.ArticleForm.patchValue({ stock: +stockValue });
-    // console.log(this.ArticleForm.value);
-
     this.info.emit(this.ArticleForm.value);
   }
   modifierArticle() {

@@ -8,17 +8,22 @@
 }
 #preview {
   position: absolute;
-  top: 95px;
-  right: 434px;
+  top: 28px;
+  right: 0;
   height: 250px;
   width: 250px;
+}
+.toBottom{
+  position: fixed;
+  top: 390px;
+  width: 300px;
 }
 .fournisseur {
   height: 50px;
   margin: 10px;
   display: inline;
 }
-.name:hover{
+.name:hover {
   cursor: pointer;
   background-color: #7a7a7a;
 }
@@ -96,18 +101,18 @@ h2 {
 input[type="checkbox"] {
   margin-right: 5px;
 }
-.iconBizzar{
+.iconBizzar {
   float: right;
   cursor: pointer;
 }
-.article{
+.article {
   list-style: none;
   width: 100%;
   height: 30px;
   margin: 0;
   padding: 0;
 }
-.article:hover{
+.article:hover {
   background-color: #efefef;
   cursor: pointer;
 }

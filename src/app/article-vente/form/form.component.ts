@@ -13,7 +13,6 @@ import {
   FormGroup,
   FormArray,
   FormControl,
-  AbstractControl,
   Validators,
 } from '@angular/forms';
 import { category } from 'src/app/interface/categories';
@@ -36,10 +35,12 @@ export class FormComponent implements OnInit, OnChanges {
   categoriName: string = '';
   num: number = 1;
   @Input() articles: Article[] = [];
+  @Input() ArticleToEdit: any;
 
   constructor(private fb: FormBuilder) {
     this.formArticleVente = this.fb.group({
       libelle: new FormControl('', [Validators.required]),
+      id: new FormControl(),
       promo: new FormControl(0),
       categorie: new FormControl(''),
       marge: new FormControl(0),
@@ -52,11 +53,17 @@ export class FormComponent implements OnInit, OnChanges {
       }),
     });
   }
+  get libelle() {
+    return this.formArticleVente.get('libelle');
+  }
+  get categorie() {
+    return this.formArticleVente.get('categorie');
+  }
   createArticleFormGroup(): FormGroup {
     return this.fb.group({
       libelle: [''],
       quantite: [''],
-      id: ['']
+      id: [''],
     });
   }
   coutFabrication: number = 0;
@@ -76,26 +83,51 @@ export class FormComponent implements OnInit, OnChanges {
     let prix = quantite * prixPourCeLibelle;
     this.coutFabrication += prix;
     articleFormGroup.get('quantite')?.setValue(quantite);
-    if (stockPourCeLibelle && quantite > stockPourCeLibelle) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Vous avez dépassé le stock',
-      });
-      articleFormGroup.get('quantite')?.setValue(0);
-    }
-    this.formArticleVente.patchValue({ cout_fabrication: this.coutFabrication });
+    this.formArticleVente.patchValue({
+      cout_fabrication: this.coutFabrication,
+    });
   }
   prixDeVente: number = 0;
   calculPrixVente(event: Event) {
     let valueInput = (event.target as HTMLInputElement).value;
     this.prixDeVente = this.coutFabrication + Number(valueInput);
     this.formArticleVente.patchValue({ prix_vente: this.prixDeVente });
-    
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.articles);
+    const articles = this.ArticleToEdit?.articles;
+    if (this.ArticleToEdit !== undefined) {
+      
+    this.formArticleVente.setControl('article', this.fb.array([]));
+
+    articles?.forEach((article) => {
+      const group = this.fb.group({
+        libelle: [article.libelle],
+        quantite: [article.quantite],
+        id: [article.id],
+      });
+      (<FormArray>this.formArticleVente.get('article')).push(group);
+    });
+    this.formArticleVente.patchValue({ libelle: this.ArticleToEdit?.libelle });
+    this.formArticleVente.patchValue({
+      categorie: this.ArticleToEdit?.categorie.id,
+    });
+    this.formArticleVente.patchValue({ promo: this.ArticleToEdit?.promo });
+    this.formArticleVente.patchValue({ marge: this.ArticleToEdit?.marge });
+    this.formArticleVente.patchValue({
+      reference: this.ArticleToEdit?.reference,
+    });
+    this.formArticleVente.patchValue({ image: this.ArticleToEdit?.image });
+    this.formArticleVente.patchValue({
+      cout_fabrication: this.ArticleToEdit?.cout_fabrication,
+    });
+    this.formArticleVente.patchValue({
+      prix_vente: this.ArticleToEdit?.prix_vente,
+    });
+    this.formArticleVente.patchValue({ id: this.ArticleToEdit?.id });
+    console.log(this.formArticleVente.value);
+    }
+    
   }
   filteredArticles: Article[][] = [];
   filterArticle(event: Event, index: number) {
@@ -122,7 +154,6 @@ export class FormComponent implements OnInit, OnChanges {
       }
     });
   }
-
   validate(event: any) {
     let value = event.target.value;
     let newValue = value.replace(/[^0-9]/g, '');
@@ -139,7 +170,18 @@ export class FormComponent implements OnInit, OnChanges {
   changeMode() {
     this.ajout = !this.ajout;
     this.edit = !this.edit;
+    const editButton = document.querySelectorAll('.editButton');
+    if (this.edit) {
+      editButton.forEach((btn: HTMLButtonElement) => {
+        btn.disabled = false;
+      });
+    } else {
+      editButton.forEach((btn: HTMLButtonElement) => {
+        btn.disabled = true;
+      });
+    }
   }
+
   updateref(event: any) {
     const libCode = this.formArticleVente.get('libelle')?.value.substring(0, 3);
     let ref = 'REF-' + libCode.toUpperCase();
@@ -147,6 +189,7 @@ export class FormComponent implements OnInit, OnChanges {
     ref += '-' + this.num;
     this.formArticleVente.patchValue({ reference: ref });
   }
+
   convertValue() {
     let valueCategorie = this.formArticleVente.get('categorie')?.value;
     this.formArticleVente.get('categorie')?.setValue(Number(valueCategorie));
@@ -167,8 +210,11 @@ export class FormComponent implements OnInit, OnChanges {
     this.convertValue();
     this.articleVente.emit(this.formArticleVente.value);
   }
+  @Output() articleVenteToSend = new EventEmitter();
   modifierArticle() {
-    console.log('update');
+    this.convertValue();
+    this.articleVenteToSend.emit(this.formArticleVente.value);
+    console.log(this.formArticleVente.value);
   }
 
   get articleControl() {
@@ -178,7 +224,7 @@ export class FormComponent implements OnInit, OnChanges {
   ajouterArticle() {
     const articles = this.formArticleVente.get('article') as FormArray;
     articles.push(this.createArticleFormGroup());
-    console.log(this.formArticleVente.value);
+    // console.log(this.formArticleVente.value);
   }
 
   imageFile: any = '';

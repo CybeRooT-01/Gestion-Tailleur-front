@@ -1,19 +1,17 @@
-
 <div class="row border">
   <table class="table">
-    <thead 
-    style="
-    width: 100%;
-    ">
-      <tr class="d-flex" >
-        <th scope="col" style="margin-left: 10px;">Libelle</th>
-        <th scope="col"style="margin-left: 80px;">Qte De stock</th>
-        <th scope="col"style="margin-left: 60px;">Article de Vente</th>
+    <thead style="width: 100%">
+      <tr class="d-flex">
+        <th scope="col" style="margin-left: 10px">Libelle</th>
+        <th scope="col" style="margin-left: 20px">Qte De stock</th>
+        <th scope="col" style="margin-left: 40px; width: 170px">
+          Article de Vente
+        </th>
+        <th scope="col" style="margin-left: 120px">Options</th>
       </tr>
     </thead>
-    <tbody >
-      <app-item-vente [ArticleVente]="ArticleVente"></app-item-vente>
-      <app-pagination></app-pagination>
+    <tbody app-item-vente [ArticleVente]="ArticleVente" [page]="page" (ArticleToEdit)="getIDArticleToEdit($event)" (ArticleToDelete)="getIDArticleToDelet($event)">
     </tbody>
+    <app-articlevente-pagination [articles]="ArticleVente" (info3)="getActivePage($event)"></app-articlevente-pagination>
   </table>
 </div>

@@ -28,7 +28,11 @@
   <div class="col-md-6">
     <div class="form-group" style="margin-bottom: 10px">
       <label for="libelle" class=" ">Libellé:</label> &nbsp;
-      <span class="text-danger">La libelle est obligatoire</span>
+      <span
+        *ngIf="libelle && libelle.invalid && libelle.touched"
+        class="text-danger"
+        >La libelle est obligatoire</span
+      >
       <input
         formControlName="libelle"
         type="text"
@@ -37,9 +41,14 @@
         placeholder="Libellé"
         autocomplete="off"
         (input)="updateref($event)"
+        [value]="ArticleToEdit?.libelle"
       />
       <label for="categorie" class=" ">Catégorie:</label>
-      <span class="text-danger">La categorie est obligatoire</span>
+      <span
+        *ngIf="categorie && categorie.invalid && categorie.touched"
+        class="text-danger"
+        >La categorie est obligatoire</span
+      >
       <select
         type="text"
         id="categorie"
@@ -49,6 +58,7 @@
         formControlName="categorie"
         (change)="getCategory($event)"
         (change)="updateref($event)"
+        [value]="ArticleToEdit?.categorie.id"
       >
         <option value="">Selectionnez une categorie</option>
         <option *ngFor="let category of Categories" [value]="category.id">
@@ -94,11 +104,11 @@
               </th>
             </tr>
           </thead>
-          <tbody
-            *ngFor="let article of articleControl.controls; let i = index"
-            [formGroupName]="i"
-          >
-            <tr>
+          <tbody>
+            <tr
+              *ngFor="let article of articleControl.controls; let i = index"
+              [formGroupName]="i"
+            >
               <td>
                 <input
                   formControlName="libelle"
@@ -154,6 +164,7 @@
         (input)="validate($event)"
         formControlName="marge"
         (input)="calculPrixVente($event)"
+        [value]="ArticleToEdit?.marge"
       />
       <label class=" ">Prix Vente</label>
       <input
@@ -161,7 +172,7 @@
         class="form-control"
         readonly
         formControlName="prix_vente"
-        [value]="prixDeVente"
+        [value]="ArticleToEdit?.prix_vente ?? prixDeVente"
       />
       <button
         class="btn btn-primary mt-3"
@@ -174,11 +185,17 @@
   </div>
   <div class="col-md-6">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-      <label class="btn-btn-default">
+      <label class="btn-btn-default" style="position: fixed; top: 80px;">
         <img
           id="preview"
           draggable="false"
-          [src]="imageFile ? imageFile : 'https://via.placeholder.com/250'"
+          [src]="
+            imageFile
+              ? imageFile
+              : ArticleToEdit?.image
+              ? ArticleToEdit.image
+              : 'https://via.placeholder.com/250'
+          "
         />
         <i
           id="1"
@@ -204,23 +221,26 @@
         />
       </label>
     </div>
-    <label for="reference" class=" ">Référence:</label>
-    <input
-      readonly
-      id="reference"
-      type="text"
-      class="form-control"
-      placeholder="Référence"
-      required
-      formControlName="reference"
-    />
-    <label class=" ">Cout de fabrication</label>
-    <input
-      type="text"
-      class="form-control"
-      readonly
-      formControlName="cout_fabrication"
-      [value]="coutFabrication"
-    />
+    <div class="toBottom">
+      <label for="reference" class=" ">Référence:</label>
+      <input
+        readonly
+        id="reference"
+        type="text"
+        class="form-control"
+        placeholder="Référence"
+        required
+        formControlName="reference"
+        [value]="ArticleToEdit?.reference"
+      />
+      <label class=" ">Cout de fabrication</label>
+      <input
+        type="text"
+        class="form-control"
+        readonly
+        formControlName="cout_fabrication"
+        [value]="ArticleToEdit?.cout_fabrication ?? coutFabrication"
+      />
+    </div>
   </div>
 </form>

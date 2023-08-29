@@ -20,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ListComponent } from './article-vente/list/list.component';
 import { ArticleVenteComponent } from './article-vente/article-vente.component';
+import { ArticleventePaginationComponent } from './article-vente/list/articlevente-pagination/articlevente-pagination.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,6 +35,7 @@ import { ArticleVenteComponent } from './article-vente/article-vente.component';
     PaginationComponent,
     ListComponent,
     ArticleVenteComponent,
+    ArticleventePaginationComponent,
   ],
   imports: [
     BrowserModule,

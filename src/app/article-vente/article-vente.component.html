@@ -18,8 +18,10 @@
             [Categories]="Categories"
             [articles]="Articles"
             (articleVente)="ajouterArticle($event)"
+            [ArticleToEdit]="ArticleVenteToEdit"
+            (articleVenteToSend)="getArticleVenteToEdit($event)"
           ></app-form-vente>
-          <app-list-vente [ArticleVente]="ArticleVente"></app-list-vente>
+          <app-list-vente [ArticleVente]="ArticleVente" (ArticleToEdit)="getArticleIdToEdit($event)" (ArticleToDelete)="getArticleIdToDelete($event)" ></app-list-vente>
         </div>
       </div>
     </div>

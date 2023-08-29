@@ -22,6 +22,16 @@ export abstract class RestService<T extends RestREsponse<T>> {
       catchError(this.handleError)
     );
   }
+  getById(id: number) {
+    return this.http
+      .get(Environnements.api.baseUrl + `/${this.uri()}/${id}`)
+      .pipe(
+        tap((response: any): void => {
+          console.log(response);
+        }),
+        catchError(this.handleError)
+    );
+  }
 
   create(data: Partial<T>): Observable<T> {
     const httpOptions = {

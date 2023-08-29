@@ -13,7 +13,8 @@ import { ArticleVenteService } from '../services/article-vente.service';
 export class ArticleVenteComponent implements OnInit, OnDestroy {
   Categories: category[];
   Articles: Article[];
-  ArticleVente: any
+  ArticleVente: any;
+  @Output() ArticleToPagine = new EventEmitter();
 
   constructor(
     private Articleservice: ArticleService,
@@ -36,7 +37,7 @@ export class ArticleVenteComponent implements OnInit, OnDestroy {
       this.Articles = res.articles;
     });
   }
-  ajouterArticle(article: Article) {    
+  ajouterArticle(article: Article) {
     return this.Articleventeservice.create(article).subscribe((res) => {
       this.getArticles();
       this.getAllArticlesVente();
@@ -44,7 +45,33 @@ export class ArticleVenteComponent implements OnInit, OnDestroy {
   }
   getAllArticlesVente() {
     return this.Articleventeservice.All().subscribe((res) => {
-      this.ArticleVente = res.data;      
+      this.ArticleVente = res.data;
+    });
+  }
+  ArticleVenteToEdit: any;
+  getArticleIdToEdit(id: number) {
+    this.Articleventeservice.getById(id).subscribe((res) => {
+      this.ArticleVenteToEdit = res.data;
+      console.log(this.ArticleVenteToEdit);
+    });
+  }
+  getArticleIdToDelete(id: number) {
+    this.Articleventeservice.delete(id).subscribe((res) => {
+      console.log(res);
+      
+      this.getAllArticlesVente();
+    });
+  }
+    
+  getArticleVenteToEdit(article: any) {
+    return this.Articleventeservice.update(article).subscribe((res) => {
+      this.getAllArticlesVente();
+      console.log(res);
+    });
+  }
+  supprimerArticleVente(id: number) {
+    return this.Articleventeservice.delete(id).subscribe((res) => {
+      this.getAllArticlesVente();
     });
   }
 

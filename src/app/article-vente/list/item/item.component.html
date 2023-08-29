@@ -1,20 +1,44 @@
 <div class="toInsertRow">
-  <div *ngFor="let article of ArticleVente.reverse()
-          let i = index" >
-    <tr class="d-flex justify-content-between" id="{{article.id}}">
-      <td>{{article.libelle}}</td>
-      <!-- <td>{{article.prix}}</td>
-      <td style="margin-left: 0px">{{article.stock}}</td>
-      <td>{{article.categorie.libelle}}</td> -->
+  <div *ngFor="let article of ArticleVente?.reverse() | paginate
+              : {
+                  itemsPerPage: tableSize,
+                  currentPage: page,
+                  totalItems: count
+                };
+          let i = index">
+    <tr class="d-flex justify-content-between" id="{{ article.id }}">
+      <td>{{ article.libelle }}</td>
+       <td>100</td>
+      <td style="margin-right: 70px;">
+        <span *ngFor="let item of article.articles">
+          {{ item.libelle }},{{ item.quantite }}
+        </span>
+      </td>
       <td>
-        <button class="btn btn-sm btn-warning editButton" style="margin-right: 15px" disabled>
+        <button
+          class="btn btn-sm btn-warning editButton "
+          disabled
+          style="margin-right: 20px;"
+          (click)="editArticle(article.id)"
+        >
           Edit
         </button>
-        <button class="btn btn-sm btn-danger editButton" style="margin-right: 15px" disabled>
-          supprimer
+         <button
+          class="btn btn-sm btn-danger"
+          (click)="confirmDelete(article)"
+          *ngIf="!article.confirmingDelete; else confirmingDelete">
+          Supprimer
         </button>
+        <ng-template #confirmingDelete>
+          <button
+            class="btn btn-sm btn-danger"
+            (click)="supprimerDefinitivement(article)"
+          >
+            OK &nbsp;&nbsp;&nbsp;
+            {{ article.countdown }} &nbsp;&nbsp;&nbsp;&nbsp;
+          </button>
+        </ng-template>
       </td>
     </tr>
   </div>
 </div>
-
