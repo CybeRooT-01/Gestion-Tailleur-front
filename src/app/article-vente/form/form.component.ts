@@ -18,6 +18,7 @@ import {
 import { category } from 'src/app/interface/categories';
 import { ArticleVenteValidator } from 'src/app/validators/articleVenteValidator';
 import { Article } from 'src/app/interface/articles';
+import { ImageService } from 'src/app/services/image.service';
 
 @Component({
   selector: 'app-form-vente',
@@ -37,7 +38,7 @@ export class FormComponent implements OnInit, OnChanges {
   @Input() articles: Article[] = [];
   @Input() ArticleToEdit: any;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private imageService: ImageService) {
     this.formArticleVente = this.fb.group({
       libelle: new FormControl('', [Validators.required]),
       id: new FormControl(),
@@ -97,37 +98,37 @@ export class FormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     const articles = this.ArticleToEdit?.articles;
     if (this.ArticleToEdit !== undefined) {
-      
-    this.formArticleVente.setControl('article', this.fb.array([]));
+      this.formArticleVente.setControl('article', this.fb.array([]));
 
-    articles?.forEach((article) => {
-      const group = this.fb.group({
-        libelle: [article.libelle],
-        quantite: [article.quantite],
-        id: [article.id],
+      articles?.forEach((article) => {
+        const group = this.fb.group({
+          libelle: [article.libelle],
+          quantite: [article.quantite],
+          id: [article.id],
+        });
+        (<FormArray>this.formArticleVente.get('article')).push(group);
       });
-      (<FormArray>this.formArticleVente.get('article')).push(group);
-    });
-    this.formArticleVente.patchValue({ libelle: this.ArticleToEdit?.libelle });
-    this.formArticleVente.patchValue({
-      categorie: this.ArticleToEdit?.categorie.id,
-    });
-    this.formArticleVente.patchValue({ promo: this.ArticleToEdit?.promo });
-    this.formArticleVente.patchValue({ marge: this.ArticleToEdit?.marge });
-    this.formArticleVente.patchValue({
-      reference: this.ArticleToEdit?.reference,
-    });
-    this.formArticleVente.patchValue({ image: this.ArticleToEdit?.image });
-    this.formArticleVente.patchValue({
-      cout_fabrication: this.ArticleToEdit?.cout_fabrication,
-    });
-    this.formArticleVente.patchValue({
-      prix_vente: this.ArticleToEdit?.prix_vente,
-    });
-    this.formArticleVente.patchValue({ id: this.ArticleToEdit?.id });
-    console.log(this.formArticleVente.value);
+      this.formArticleVente.patchValue({
+        libelle: this.ArticleToEdit?.libelle,
+      });
+      this.formArticleVente.patchValue({
+        categorie: this.ArticleToEdit?.categorie.id,
+      });
+      this.formArticleVente.patchValue({ promo: this.ArticleToEdit?.promo });
+      this.formArticleVente.patchValue({ marge: this.ArticleToEdit?.marge });
+      this.formArticleVente.patchValue({
+        reference: this.ArticleToEdit?.reference,
+      });
+      this.formArticleVente.patchValue({ image: this.ArticleToEdit?.image });
+      this.formArticleVente.patchValue({
+        cout_fabrication: this.ArticleToEdit?.cout_fabrication,
+      });
+      this.formArticleVente.patchValue({
+        prix_vente: this.ArticleToEdit?.prix_vente,
+      });
+      this.formArticleVente.patchValue({ id: this.ArticleToEdit?.id });
+      console.log(this.formArticleVente.value);
     }
-    
   }
   filteredArticles: Article[][] = [];
   filterArticle(event: Event, index: number) {
@@ -227,25 +228,17 @@ export class FormComponent implements OnInit, OnChanges {
     // console.log(this.formArticleVente.value);
   }
 
-  imageFile: any = '';
-  extensionsAutorised = ['jpg', 'jpeg', 'png', 'jfif'];
-  extension: string = '';
-  onFileChange(event: any) {
-    this.imageFile = event.target.files[0];
-    this.extension = this.imageFile.name.split('.')[1];
-    if (!this.extensionsAutorised.includes(this.extension)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Vous devez choisir une image',
-      });
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imageFile = reader.result as string;
+  imageFile: any;
+  async onFileChange(event: any) {
+    const file = event.target.files[0];
+
+    try {
+      this.imageFile = await this.imageService.uploadImageAndGetBase64(file)
       this.formArticleVente.patchValue({ image: this.imageFile });
-    };
-    reader.readAsDataURL(this.imageFile);
+      console.log(this.formArticleVente.value);
+      
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
