@@ -65,6 +65,9 @@
           {{ category.libelle }}
         </option>
       </select>
+      <span  *ngIf="promo && promo.invalid && promo.touched" class="text-danger"
+        >Le promo doit etre compris entre 1 et 100</span
+      >
       <div
         class="form-check d-flex justify-content-between"
         style="height: 20px"
@@ -79,6 +82,7 @@
             (change)="toggleInput()"
           />
         </div>
+
         <input
           *ngIf="showInput"
           type="text"
@@ -185,7 +189,7 @@
   </div>
   <div class="col-md-6">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-      <label class="btn-btn-default" style="position: fixed; top: 80px;">
+      <label class="btn-btn-default" style="position: fixed; top: 80px">
         <img
           id="preview"
           draggable="false"

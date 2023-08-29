@@ -42,7 +42,7 @@ export class FormComponent implements OnInit, OnChanges {
     this.formArticleVente = this.fb.group({
       libelle: new FormControl('', [Validators.required]),
       id: new FormControl(),
-      promo: new FormControl(0),
+      promo: new FormControl(0, [Validators.min(1), Validators.max(100)]),
       categorie: new FormControl(''),
       marge: new FormControl(0),
       reference: new FormControl(''),
@@ -53,6 +53,9 @@ export class FormComponent implements OnInit, OnChanges {
         validators: [ArticleVenteValidator.validArticleArrayItems],
       }),
     });
+  }
+  get promo() {
+    return this.formArticleVente.get('promo');
   }
   get libelle() {
     return this.formArticleVente.get('libelle');
@@ -225,7 +228,6 @@ export class FormComponent implements OnInit, OnChanges {
   ajouterArticle() {
     const articles = this.formArticleVente.get('article') as FormArray;
     articles.push(this.createArticleFormGroup());
-    // console.log(this.formArticleVente.value);
   }
 
   imageFile: any;
@@ -233,10 +235,9 @@ export class FormComponent implements OnInit, OnChanges {
     const file = event.target.files[0];
 
     try {
-      this.imageFile = await this.imageService.uploadImageAndGetBase64(file)
+      this.imageFile = await this.imageService.uploadImageAndGetBase64(file);
       this.formArticleVente.patchValue({ image: this.imageFile });
       console.log(this.formArticleVente.value);
-      
     } catch (error) {
       console.error(error);
     }
