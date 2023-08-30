@@ -3,6 +3,7 @@ import { ArticleService } from '../services/article.service';
 import { category } from '../interface/categories';
 import { Article } from '../interface/articles';
 import { ArticleVenteService } from '../services/article-vente.service';
+import { Tailles } from '../interface/tailles';
 
 
 @Component({
@@ -14,6 +15,7 @@ export class ArticleVenteComponent implements OnInit, OnDestroy {
   Categories: category[];
   Articles: Article[];
   ArticleVente: any;
+  tailles:Tailles[]
   @Output() ArticleToPagine = new EventEmitter();
 
   constructor(
@@ -25,6 +27,13 @@ export class ArticleVenteComponent implements OnInit, OnDestroy {
     this.chargerCategorie();
     this.getArticles();
     this.getAllArticlesVente();
+    this.getTailles()
+  }
+  getTailles() {
+    this.Articleventeservice.getAllTailles().subscribe((res) => {
+      this.tailles = res.tailles;
+      
+    })
   }
 
   chargerCategorie() {

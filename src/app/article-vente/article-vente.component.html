@@ -20,6 +20,8 @@
             (articleVente)="ajouterArticle($event)"
             [ArticleToEdit]="ArticleVenteToEdit"
             (articleVenteToSend)="getArticleVenteToEdit($event)"
+            [tailles]="tailles"
+            [ArticleVente]="ArticleVente"
           ></app-form-vente>
           <app-list-vente [ArticleVente]="ArticleVente" (ArticleToEdit)="getArticleIdToEdit($event)" (ArticleToDelete)="getArticleIdToDelete($event)" ></app-list-vente>
         </div>

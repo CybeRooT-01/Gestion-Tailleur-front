@@ -43,6 +43,19 @@
         (input)="updateref($event)"
         [value]="ArticleToEdit?.libelle"
       />
+      <label for="tailles" class=" ">Tailles:</label>
+      <select
+        type="text"
+        class="form-control"
+        formControlName="tailles"
+        [value]="ArticleToEdit?.tailles[0].id"
+      >
+        <option>Selectionnez une</option>
+        <option *ngFor="let taille of tailles" [value]="taille.id">
+          {{ taille.libelle}}
+        </option>
+      </select>
+
       <label for="categorie" class=" ">Catégorie:</label>
       <span
         *ngIf="categorie && categorie.invalid && categorie.touched"

@@ -1,5 +1,5 @@
 import {
-  FormArray,
+  FormArray, FormControl,
 } from '@angular/forms';
 
 export class ArticleVenteValidator {

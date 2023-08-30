@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import { Article } from 'src/app/interface/articles';
 import { category } from 'src/app/interface/categories';
+import { Tailles } from 'src/app/interface/tailles';
 import { ImageService } from 'src/app/services/image.service';
 import { ArticleVenteValidator } from 'src/app/validators/articleVenteValidator';
 import Swal from 'sweetalert2';
@@ -35,18 +36,24 @@ export class FormComponent implements OnInit, OnChanges {
   @Input() Categories: category[] = [];
   categoriName: string = '';
   num: number = 1;
+  @Input() tailles: Tailles[];
   @Input() articles: Article[] = [];
   @Input() ArticleToEdit: any;
+  @Input() ArticleVente: any;
   maxMarge: number = 0;
   constructor(private fb: FormBuilder, private imageService: ImageService) {
     this.formArticleVente = this.fb.group({
-      libelle: new FormControl('', [Validators.required]),
+      libelle: new FormControl('', [
+        Validators.required,
+        this.uniqueLibelleValidator.bind(this),
+      ]),
       id: new FormControl(),
       promo: new FormControl(0, [Validators.min(0), Validators.max(100)]),
       categorie: new FormControl(''),
-      marge: new FormControl(0,[Validators.required]),
+      marge: new FormControl(0, [Validators.required]),
       reference: new FormControl(''),
       image: new FormControl(''),
+      tailles: new FormControl(''),
       cout_fabrication: new FormControl(0),
       prix_vente: new FormControl(0),
       article: this.fb.array([this.createArticleFormGroup()], {
@@ -54,6 +61,20 @@ export class FormComponent implements OnInit, OnChanges {
       }),
     });
   }
+  uniqueLibelleValidator(control: FormControl): { [key: string]: any } | null {
+    const libelle = control.value;
+    let AllArticleNames = this.ArticleVente?.map((article) => {
+      return article.libelle;
+    });
+    let isUnique = AllArticleNames?.every((name) => {
+      return name !== libelle;
+    });
+    if (!isUnique) {
+      return { uniqueLibelle: true };
+    }
+    return null;
+  }
+
   get marge() {
     return this.formArticleVente.get('marge');
   }
@@ -69,9 +90,21 @@ export class FormComponent implements OnInit, OnChanges {
   createArticleFormGroup(): FormGroup {
     return this.fb.group({
       libelle: ['', [Validators.required]],
-      quantite: ['', [Validators.required]],
+      quantite: ['', [Validators.required, this.onlyNumbersValidator]],
       id: [''],
     });
+  }
+  onlyNumbersValidator(control: FormControl): { [key: string]: any } | null {
+    const value = control.value;
+    if (value && !/^\d+$/.test(value)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'La quantité doit contenir uniquement des chiffres.',
+      });
+      return { onlyNumbers: true };
+    }
+    return null;
   }
   coutFabrication: number = 0;
   calculCoutFabrication(event: Event, index: number) {
@@ -107,7 +140,6 @@ export class FormComponent implements OnInit, OnChanges {
       });
       this.formArticleVente.get('marge').setErrors({ invalidMarge: true });
       return;
-
     }
     this.prixDeVente = this.coutFabrication + Number(valueInput);
     this.formArticleVente.patchValue({ prix_vente: this.prixDeVente });
@@ -145,7 +177,12 @@ export class FormComponent implements OnInit, OnChanges {
         prix_vente: this.ArticleToEdit?.prix_vente,
       });
       this.formArticleVente.patchValue({ id: this.ArticleToEdit?.id });
-      console.log(this.formArticleVente.value);
+      this.formArticleVente.patchValue({
+        tailles: this.ArticleToEdit?.tailles,
+      });
+      // console.log(this.tailles);
+
+      // console.log(this.formArticleVente.value.tailles);
     }
   }
   filteredArticles: Article[][] = [];
@@ -155,6 +192,16 @@ export class FormComponent implements OnInit, OnChanges {
       return article.libelle.includes(valueInput);
     });
     this.filteredArticles[index] = articles;
+    //si l'article n'existe pas on desactive le champ quantite associé
+    if (articles.length == 0) {
+      const articlesArray = this.formArticleVente.get('article') as FormArray;
+      const articleFormGroup = articlesArray.at(index) as FormGroup;
+      articleFormGroup.get('quantite')?.disable();
+    }else{
+      const articlesArray = this.formArticleVente.get('article') as FormArray;
+      const articleFormGroup = articlesArray.at(index) as FormGroup;
+      articleFormGroup.get('quantite')?.enable();
+    }
   }
   searchTerms: string[] = [];
   setSearchTerm(value: string, index: number) {
@@ -173,6 +220,7 @@ export class FormComponent implements OnInit, OnChanges {
       }
     });
   }
+
   validate(event: any) {
     let value = event.target.value;
     let newValue = value.replace(/[^0-9]/g, '');
@@ -216,6 +264,8 @@ export class FormComponent implements OnInit, OnChanges {
     this.formArticleVente.get('promo')?.setValue(Number(valuePromo));
     let valueMarge = this.formArticleVente.get('marge')?.value;
     this.formArticleVente.get('marge')?.setValue(Number(valueMarge));
+    let TailleValue = this.formArticleVente.get('taille')?.value;
+    this.formArticleVente.get('taille')?.setValue(Number(TailleValue));
   }
 
   ajouterOuModifierArticle() {
@@ -227,6 +277,8 @@ export class FormComponent implements OnInit, OnChanges {
   }
   ajouterArticleVente() {
     this.convertValue();
+    // console.log(this.formArticleVente.value);
+
     this.articleVente.emit(this.formArticleVente.value);
   }
   @Output() articleVenteToSend = new EventEmitter();
@@ -243,14 +295,14 @@ export class FormComponent implements OnInit, OnChanges {
   ajouterArticle() {
     const articles = this.formArticleVente.get('article') as FormArray;
     if (!articles.at(articles.length - 1).valid) {
-       Swal.fire({
+      Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'Vous devez remplir le champ précédent',
-       });
-      return
+      });
+      return;
     }
-    
+
     articles.push(this.createArticleFormGroup());
   }
 
