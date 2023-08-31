@@ -93,6 +93,7 @@
             value=""
             id="flexCheckDefault"
             (change)="toggleInput()"
+            [checked]="ArticleToEdit?.promo != null"
           />
         </div>
 
@@ -108,7 +109,7 @@
       </div>
       <div style="margin-top: 10px">
         <label class=" ">Liste Des articles de confections</label>
-        <table class="table" formArrayName="article">
+        <table class="table" formArrayName="article" >
           <thead>
             <tr>
               <th scope="col">Libelle</th>

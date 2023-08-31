@@ -4,6 +4,7 @@ import { category } from '../interface/categories';
 import { Article } from '../interface/articles';
 import { ArticleVenteService } from '../services/article-vente.service';
 import { Tailles } from '../interface/tailles';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -79,7 +80,7 @@ export class ArticleVenteComponent implements OnInit, OnDestroy {
     });
   }
   supprimerArticleVente(id: number) {
-    return this.Articleventeservice.delete(id).subscribe((res) => {
+    return this.Articleventeservice.delete(id).subscribe((res) => {  
       this.getAllArticlesVente();
     });
   }

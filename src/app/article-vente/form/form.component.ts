@@ -50,6 +50,7 @@ export class FormComponent implements OnInit, OnChanges {
       id: new FormControl(),
       promo: new FormControl(0, [Validators.min(0), Validators.max(100)]),
       categorie: new FormControl(''),
+      showInput: new FormControl(false),
       marge: new FormControl(0, [Validators.required]),
       reference: new FormControl(''),
       image: new FormControl(''),
@@ -62,6 +63,7 @@ export class FormComponent implements OnInit, OnChanges {
     });
   }
   uniqueLibelleValidator(control: FormControl): { [key: string]: any } | null {
+    if(this.edit) return null;
     const libelle = control.value;
     let AllArticleNames = this.ArticleVente?.map((article) => {
       return article.libelle;
@@ -183,6 +185,9 @@ export class FormComponent implements OnInit, OnChanges {
       // console.log(this.tailles);
 
       // console.log(this.formArticleVente.value.tailles);
+      if (this.ArticleToEdit?.promo !== null) {
+        this.showInput = true;
+      }
     }
   }
   filteredArticles: Article[][] = [];
@@ -192,17 +197,17 @@ export class FormComponent implements OnInit, OnChanges {
       return article.libelle.includes(valueInput);
     });
     this.filteredArticles[index] = articles;
-    //si l'article n'existe pas on desactive le champ quantite associé
     if (articles.length == 0) {
       const articlesArray = this.formArticleVente.get('article') as FormArray;
       const articleFormGroup = articlesArray.at(index) as FormGroup;
       articleFormGroup.get('quantite')?.disable();
-    }else{
+    } else {
       const articlesArray = this.formArticleVente.get('article') as FormArray;
       const articleFormGroup = articlesArray.at(index) as FormGroup;
       articleFormGroup.get('quantite')?.enable();
     }
   }
+
   searchTerms: string[] = [];
   setSearchTerm(value: string, index: number) {
     this.searchTerms[index] = value;
@@ -233,6 +238,9 @@ export class FormComponent implements OnInit, OnChanges {
   }
   toggleInput() {
     this.showInput = !this.showInput;
+    if (!this.showInput) {
+      this.formArticleVente.get('promo').setValue(0); // Réinitialisez la valeur si nécessaire
+    }
   }
   changeMode() {
     this.ajout = !this.ajout;
@@ -266,6 +274,9 @@ export class FormComponent implements OnInit, OnChanges {
     this.formArticleVente.get('marge')?.setValue(Number(valueMarge));
     let TailleValue = this.formArticleVente.get('taille')?.value;
     this.formArticleVente.get('taille')?.setValue(Number(TailleValue));
+    if (this.formArticleVente.get('promo')?.value == 0) {
+      this.formArticleVente.get('promo')?.setValue(null);
+    }
   }
 
   ajouterOuModifierArticle() {
@@ -277,7 +288,7 @@ export class FormComponent implements OnInit, OnChanges {
   }
   ajouterArticleVente() {
     this.convertValue();
-    // console.log(this.formArticleVente.value);
+    console.log(this.formArticleVente.value);
 
     this.articleVente.emit(this.formArticleVente.value);
   }

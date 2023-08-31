@@ -81,6 +81,11 @@ export abstract class RestService<T extends RestREsponse<T>> {
       .delete<T>(Environnements.api.baseUrl + `/${this.uri()}/${id}`)
       .pipe(
         tap((response: any): void => {
+          notification.fire({
+            title: 'Succès',
+            icon: 'success',
+            text: 'Données supprimées avec succès',
+          });
           console.log(response);
         }),
         catchError(this.handleError)
