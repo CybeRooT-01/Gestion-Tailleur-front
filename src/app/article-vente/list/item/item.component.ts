@@ -20,7 +20,8 @@ export class ItemComponent implements OnInit, OnChanges {
   @Output() ArticleToEdit = new EventEmitter<number>();
   @Input() page: number;
   count: number = 0;
-  tableSize: number = 1;
+  // tableSize: number = 1;*
+  @Input()tableSize: number=1;
   tableSizes: number[] = [3, 6, 9, 12];
   confirmDelete(article) {
     article.confirmingDelete = true;

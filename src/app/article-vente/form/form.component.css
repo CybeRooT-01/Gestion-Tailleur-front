@@ -14,8 +14,8 @@
   width: 250px;
 }
 .toBottom{
-  position: fixed;
-  top: 390px;
+  position: relative;
+  top: 90px;
   width: 300px;
 }
 .fournisseur {

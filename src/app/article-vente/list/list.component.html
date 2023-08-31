@@ -7,11 +7,33 @@
         <th scope="col" style="margin-left: 40px; width: 170px">
           Article de Vente
         </th>
-        <th scope="col" style="margin-left: 120px">Options</th>
+        <th scope="col" style="margin-left: 80px">Options</th>
+        <th>
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            style="width: 100px"
+            (change)="changeTableSize($event)"
+            >
+            <option>paginer par</option>
+            <option value="{{i}}" *ngFor="let i of articleVenteLength">
+              {{ i }}
+            </option>
+          </select>
+        </th>
       </tr>
     </thead>
-    <tbody app-item-vente [ArticleVente]="ArticleVente" [page]="page" (ArticleToEdit)="getIDArticleToEdit($event)" (ArticleToDelete)="getIDArticleToDelet($event)">
-    </tbody>
-    <app-articlevente-pagination [articles]="ArticleVente" (info3)="getActivePage($event)"></app-articlevente-pagination>
+    <tbody
+      app-item-vente
+      [ArticleVente]="ArticleVente"
+      [page]="page"
+      (ArticleToEdit)="getIDArticleToEdit($event)"
+      (ArticleToDelete)="getIDArticleToDelet($event)"
+      [tableSize]="tableSize"
+    ></tbody>
+    <app-articlevente-pagination
+      [articles]="ArticleVente"
+      (info3)="getActivePage($event)"
+    ></app-articlevente-pagination>
   </table>
 </div>

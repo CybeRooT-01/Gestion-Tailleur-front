@@ -43,16 +43,16 @@
         (input)="updateref($event)"
         [value]="ArticleToEdit?.libelle"
       />
-      <label for="tailles" class=" ">Tailles:</label>
+      <label for="tailles" >Tailles:</label>
       <select
         type="text"
-        class="form-control"
+        class="form-select"
         formControlName="tailles"
         [value]="ArticleToEdit?.tailles[0].id"
       >
-        <option>Selectionnez une</option>
+        <option selected>Selectionnez une</option>
         <option *ngFor="let taille of tailles" [value]="taille.id">
-          {{ taille.libelle}}
+          {{ taille.libelle }}
         </option>
       </select>
 
@@ -65,7 +65,7 @@
       <select
         type="text"
         id="categorie"
-        class="form-control mb-2"
+        class="form-select mb-2"
         placeholder="Catégorie"
         name="selectedCategory"
         formControlName="categorie"
@@ -107,9 +107,9 @@
           (input)="validate($event)"
         />
       </div>
-      <div style="margin-top: 10px">
+      <div style="margin-top: 10px;">
         <label class=" ">Liste Des articles de confections</label>
-        <table class="table" formArrayName="article" >
+        <table class="table" formArrayName="article">
           <thead>
             <tr>
               <th scope="col">Libelle</th>
@@ -206,7 +206,7 @@
   </div>
   <div class="col-md-6">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-      <label class="btn-btn-default" style="position: fixed; top: 80px">
+      <label class="btn-btn-default" style="position: relative; top: 80px">
         <img
           id="preview"
           draggable="false"
